@@ -1,16 +1,25 @@
+import { useAppDispatch } from 'app/hooks';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { numberWithCommas } from 'utils';
 import Button from '../../../components/common/Button';
+import { productActions } from '../productSlice';
 
 export interface ProductCardProps {
-  img01: string;
-  img02: string;
-  name: string;
-  price: number;
-  slug: string;
+  img01?: string;
+  img02?: string;
+  name?: string;
+  price?: number;
+  slug?: string;
 }
 
 export const ProductCard = (props: ProductCardProps) => {
+  const dispatch = useAppDispatch();
+
+  const handleClick = () => {
+    dispatch(productActions.set(props.slug as string));
+    dispatch(productActions.setClassName('active'));
+  };
   return (
     <div className='product-card'>
       <Link to={`/catalog/${props.slug}`}>
@@ -20,14 +29,21 @@ export const ProductCard = (props: ProductCardProps) => {
         </div>
         <h3 className='product-card__name'>{props.name}</h3>
         <div className='product-card__price'>
-          {props.price}
-          <span className='product-card__price__old'>
+          {numberWithCommas(props.price)}
+          <div className='product-card__price__old'>
             <del>{399000}</del>
-          </span>
+          </div>
         </div>
       </Link>
       <div className='product-card__btn'>
-        <Button size='sm' icon='bx bx-cart' animate={true}>
+        <Button
+          size='sm'
+          icon='bx bx-cart'
+          animate={true}
+          onClick={() => {
+            handleClick();
+          }}
+        >
           chọn mua
         </Button>
       </div>

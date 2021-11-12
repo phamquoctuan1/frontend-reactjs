@@ -1,4 +1,11 @@
-import { Box, makeStyles, Paper, Button, Typography, Theme } from '@material-ui/core';
+import {
+  Box,
+  makeStyles,
+  Paper,
+  Button,
+  Typography,
+  Theme,
+} from '@material-ui/core';
 import authApi from 'api/authApi';
 import { Helmet } from 'components/common';
 import { User } from 'models';
@@ -9,7 +16,7 @@ import RegisterForm from '../components/RegisterForm';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
 import { Alert } from '@material-ui/lab';
-const useStyles = makeStyles((theme :Theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'flex',
     flexFlow: 'row nowrap',

@@ -1,6 +1,6 @@
 .custom-checkbox {
     @include flex(center, flex-start);
-
+    text-transform: uppercase;
     cursor: pointer;
 
     &:hover {

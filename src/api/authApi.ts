@@ -3,7 +3,7 @@ import { User } from 'models';
 import { UserRespone } from 'models/common';
 import axiosClient from './axiosClient';
 
-const productApi = {
+const authApi = {
   getUser(data: any): Promise<any> {
     const url = '/auth/user';
     return axiosClient.get(url, {
@@ -39,4 +39,4 @@ const productApi = {
   },
 };
 
-export default productApi;
+export default authApi;

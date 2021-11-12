@@ -1,6 +1,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { connectRouter, routerMiddleware } from 'connected-react-router';
 import authReducer from 'features/auth/authSlice';
+import cartReducer from 'features/cart/cartItemsSlice';
 import productReducer from 'features/product/productSlice';
 import createSagaMiddleware from 'redux-saga';
 import { history } from 'utils';
@@ -10,6 +11,7 @@ const rootReducer = combineReducers({
   router: connectRouter(history),
   product: productReducer,
   auth: authReducer,
+  cart: cartReducer,
 });
 const sagaMiddleware = createSagaMiddleware();
 

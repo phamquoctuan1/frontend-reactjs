@@ -1,8 +1,13 @@
-import React from 'react';
+import { useAppDispatch, useAppSelector } from 'app/hooks';
+import {
+  productActions,
+  selectProductFilter,
+  selectProductList,
+} from 'features/product/productSlice';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import heroSliderData from '../../assets/fake-data/hero-slider';
 import policy from '../../assets/fake-data/policy';
-import productData from '../../assets/fake-data/products';
 import banner from '../../assets/images/banner.png';
 import {
   Grid,
@@ -16,6 +21,14 @@ import {
 } from '../../components/common';
 
 export default function Home() {
+  const dispatch = useAppDispatch();
+
+  const filter = useAppSelector(selectProductFilter);
+  const product = useAppSelector(selectProductList);
+  useEffect(() => {
+    dispatch(productActions.fetchProductList(filter));
+  }, [filter, dispatch]);
+
   return (
     <Helmet title='Trang chủ'>
       {/* hero slider */}
@@ -50,12 +63,12 @@ export default function Home() {
         <SectionTitle>top sản phẩm bán chạy trong tuần</SectionTitle>
         <SectionBody>
           <Grid col={4} mdCol={2} smCol={1} gap={20}>
-            {productData.getProducts(4).map((item, index) => (
+            {product?.map((item, index) => (
               <ProductCard
                 key={index}
-                img01={item.image01}
-                img02={item.image02}
-                name={item.title}
+                img01={item.imageInfo[0]?.url}
+                img02={item.imageInfo[0]?.url}
+                name={item.name}
                 price={Number(item.price)}
                 slug={item.slug}
               />
@@ -70,12 +83,12 @@ export default function Home() {
         <SectionTitle>sản phẩm mới</SectionTitle>
         <SectionBody>
           <Grid col={4} mdCol={2} smCol={1} gap={20}>
-            {productData.getProducts(8).map((item, index) => (
+            {product?.map((item, index) => (
               <ProductCard
                 key={index}
-                img01={item.image01}
-                img02={item.image02}
-                name={item.title}
+                img01={item.imageInfo[0]?.url}
+                img02={item.imageInfo[0]?.url}
+                name={item.name}
                 price={Number(item.price)}
                 slug={item.slug}
               />
@@ -100,12 +113,12 @@ export default function Home() {
         <SectionTitle>phổ biến</SectionTitle>
         <SectionBody>
           <Grid col={4} mdCol={2} smCol={1} gap={20}>
-            {productData.getProducts(12).map((item, index) => (
+            {product.map((item, index) => (
               <ProductCard
                 key={index}
-                img01={item.image01}
-                img02={item.image02}
-                name={item.title}
+                img01={item.imageInfo[0]?.url}
+                img02={item.imageInfo[0]?.url}
+                name={item.name}
                 price={Number(item.price)}
                 slug={item.slug}
               />

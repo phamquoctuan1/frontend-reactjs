@@ -1,7 +1,3 @@
-import { AdvancedImage } from '@cloudinary/react';
-import { Cloudinary } from '@cloudinary/url-gen';
-import { thumbnail } from '@cloudinary/url-gen/actions/resize';
-import { byRadius } from '@cloudinary/url-gen/actions/roundCorners';
 import {
   Avatar,
   Box,
@@ -35,7 +31,10 @@ const useStyles = makeStyles((theme) => ({
   boxImg: {
     display: 'flex',
     alignItems: 'center',
+    flexDirection: 'column',
     justifyContent: 'center',
+    borderRadius: '20px',
+    backgroundColor: '#d5e0f4',
   },
   boxBtn: {
     display: 'flex',
@@ -46,17 +45,17 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 'bold',
     fontSize: theme.spacing(2),
   },
+  Img: {
+    width: '150px',
+    height: '150px',
+    borderRadius: '20%',
+  },
 }));
 
 export default function Profile() {
   const user = useAppSelector(selectCurrentUser);
   const classes = useStyles();
-  const cld = new Cloudinary({
-    cloud: {
-      cloudName: 'quoctuan',
-    },
-  });
-  const myImage = cld.image(user?.picture);
+
   if (!user) {
     return <Redirect to='/' />;
   }
@@ -65,16 +64,8 @@ export default function Profile() {
       <Container maxWidth='sm' className={classes.root}>
         <Grid container spacing={0}>
           <Grid item xs={12}>
-            <Paper elevation={0}>
-              <Box className={classes.boxImg}>
-                <AdvancedImage
-                  cldImg={myImage
-                    .resize(
-                      thumbnail().width(150).height(150).gravity('center')
-                    ) // Crop the image, focusing on the face.
-                    .roundCorners(byRadius(20))}
-                />
-              </Box>
+            <Paper elevation={0} className={classes.boxImg}>
+              <img src={user?.picture} alt='' className={classes.Img} />
               <Box mt={2} mb={2}>
                 <Typography variant='h3' component='h3' align='center'>
                   {user?.name}
@@ -111,7 +102,11 @@ export default function Profile() {
                       secondary: classes.listItemText,
                     }}
                     primary='Số điện thoại'
-                    secondary={`${user?.phone}`}
+                    secondary={
+                      user.phone
+                        ? `${user?.phone}`
+                        : 'Chưa đăng ký số điện thoại'
+                    }
                   />
                 </ListItem>
                 <Divider variant='inset' component='li' />
@@ -127,7 +122,11 @@ export default function Profile() {
                       secondary: classes.listItemText,
                     }}
                     primary='Địa chỉ'
-                    secondary={`${user?.address}`}
+                    secondary={
+                      user.address
+                        ? `${user?.address}`
+                        : 'Chưa cập nhật địa Chỉ'
+                    }
                   />
                 </ListItem>
               </List>

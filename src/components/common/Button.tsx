@@ -6,6 +6,7 @@ export interface ButtonProps {
   icon?: string;
   animate?: boolean;
   onClick?: () => void;
+  disabled?: boolean;
   children: any;
 }
 
@@ -21,7 +22,11 @@ const Button = (props: ButtonProps) => {
     props.onClick?.();
   };
   return (
-    <button className={`btn ${bg} ${size} ${animate}`} onClick={handleClick}>
+    <button
+      className={`btn ${bg} ${size} ${animate}`}
+      disabled={props.disabled}
+      onClick={handleClick}
+    >
       <span className='btn__txt'>{props.children}</span>
       {props.icon ? (
         <span className='btn__icon'>

@@ -3,5 +3,5 @@ export interface Category {
   parentId?: number;
   name: string;
   slug: string;
-  brandId?: number;
+  children: Category[];
 }

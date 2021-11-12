@@ -22,7 +22,6 @@ export default function FileInputField({
         type='file'
         value={value}
         onChange={(e) => {
-          console.log(e.target.files);
           setValue(e.target.value);
           field.onChange(e.target.files);
         }}

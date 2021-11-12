@@ -1,5 +1,3 @@
-import { AdvancedImage } from '@cloudinary/react';
-import { Cloudinary } from '@cloudinary/url-gen';
 import Button from '@material-ui/core/Button';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
@@ -29,13 +27,6 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default function MenuUser(props: MenuUserProps) {
-  const cld = new Cloudinary({
-    cloud: {
-      cloudName: 'quoctuan',
-    },
-  });
-  const myImage = cld.image(props.img);
-
   const dispatch = useAppDispatch();
   const classes = useStyles();
   const [open, setOpen] = useState<boolean>(false);
@@ -94,11 +85,7 @@ export default function MenuUser(props: MenuUserProps) {
           aria-haspopup='true'
           onClick={handleToggle}
         >
-          {props.img?.startsWith('https') ? (
-            <img src={props.img} alt='' />
-          ) : (
-            <AdvancedImage cldImg={myImage} />
-          )}
+          <img src={props.img} alt='' />
         </Button>
         <Popper
           open={open}
@@ -128,10 +115,10 @@ export default function MenuUser(props: MenuUserProps) {
                           setOpen(false);
                         }}
                       >
-                        Profile
+                        Hồ sơ
                       </MenuItem>
                     </Link>
-                    <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
+                    <MenuItem onClick={handleLogoutClick}>Đăng xuất</MenuItem>
                   </MenuList>
                 </ClickAwayListener>
               </Paper>

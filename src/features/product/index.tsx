@@ -1,28 +1,60 @@
+import productApi from 'api/productApi';
+import { useAppDispatch, useAppSelector } from 'app/hooks';
 import {
   Grid,
   Helmet,
   ProductCard,
   Section,
   SectionBody,
-  SectionTitle
+  SectionTitle,
 } from 'components/common';
-import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import productData from '../../assets/fake-data/products';
+import { ProductResponse } from 'models';
+import React, { useEffect, useState } from 'react';
+import { Redirect, useParams } from 'react-router-dom';
 import ProductView from './components/ProductView';
+// import ProductView from './components/ProductView';
+import {
+  productActions,
+  selectProduct,
+  selectProductFilter,
+  selectProductList,
+} from './productSlice';
 
-export default function Product() {
+export default function ProductPage() {
   let { slug } = useParams<{ slug?: string }>();
-  const product = productData.getProductBySlug(slug);
+  const dispatch = useAppDispatch();
 
-  const relatedProducts = productData.getProducts(8);
+  const product = useAppSelector(selectProduct);
+  const filterStore = useAppSelector(selectProductFilter);
+  const [filter, setFilter] = useState(filterStore);
+  const productList = useAppSelector(selectProductList);
+  useEffect(() => {
+    setFilter({ _limit: 8, _page: 0 });
+  }, []);
+  useEffect(() => {
+    dispatch(productActions.fetchProductList(filter));
+  }, [filter, dispatch]);
 
   useEffect(() => {
+    const getProduct = async () => {
+      try {
+        const productFetch: ProductResponse = await productApi.getBySlug(slug);
+        dispatch(productActions.fetchProduct(productFetch.data));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getProduct();
+  }, [slug, dispatch]);
+  useEffect(() => {
     window.scrollTo(0, 0);
-  }, [product]);
+  }, [productList]);
+  if (!productList) {
+    return <Redirect to='/' />;
+  }
 
   return (
-    <Helmet title={product?.title}>
+    <Helmet title='Sản phẩm'>
       <Section>
         <SectionBody>
           <ProductView product={product} />
@@ -32,12 +64,12 @@ export default function Product() {
         <SectionTitle>Khám phá thêm</SectionTitle>
         <SectionBody>
           <Grid col={4} mdCol={2} smCol={1} gap={20}>
-            {relatedProducts.map((item, index) => (
+            {productList.map((item, index) => (
               <ProductCard
                 key={index}
-                img01={item.image01}
-                img02={item.image02}
-                name={item.title}
+                img01={item.imageInfo[0]?.url}
+                img02={item.imageInfo[1]?.url}
+                name={item.name}
                 price={Number(item.price)}
                 slug={item.slug}
               />

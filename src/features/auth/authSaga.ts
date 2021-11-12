@@ -86,8 +86,11 @@ function* watchLoginGoogleFlow() {
 }
 
 function* watchGetUser() {
-  const action: PayloadAction<string> = yield take(authActions.getUser.type);
-  yield fork(getUser, action.payload);
+  const isLoggedIn = Boolean(localStorage.getItem('access_token'));
+  if (isLoggedIn) {
+    const action: PayloadAction<string> = yield take(authActions.getUser.type);
+    yield fork(getUser, action.payload);
+  }
 }
 
 export default function* authSaga() {

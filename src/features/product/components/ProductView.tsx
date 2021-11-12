@@ -1,38 +1,30 @@
+import { useAppDispatch } from 'app/hooks';
 import Button from 'components/common/Button';
+import { cartActions } from 'features/cart/cartItemsSlice';
+import { Product, Size } from 'models';
 import React, { useEffect, useState } from 'react';
-
-export interface ProductCardProps {
-  title: string;
-  price: string;
-  image01: string;
-  image02: string;
-  categorySlug: string;
-  colors: string[];
-  slug: string;
-  size: string[];
-  description: string;
-}
+import { useHistory } from 'react-router-dom';
+import { productActions } from '../productSlice';
+import { toast } from 'react-toastify';
 export interface ProductViewProps {
-  product: any;
+  product?: Product;
 }
-
-const ProductView = (props: ProductViewProps) => {
-  let product = props.product;
-
+const ProductView = ({ product }: ProductViewProps) => {
   if (product === undefined)
     product = {
-      title: '',
-      price: '',
-      image01: '',
-      image02: '',
-      categorySlug: '',
-      colors: [],
-      slug: '',
-      size: [],
+      name: '',
+      price: 0,
+      amount: 0,
       description: '',
+      imageInfo: [],
+      sizeInfo: [],
+      colorInfo: [],
+      slug: '',
     };
 
-  const [previewImg, setPreviewImg] = useState<string>(product.image01);
+  const history = useHistory();
+  const dispatch = useAppDispatch();
+  const [previewImg, setPreviewImg] = useState<any>(product.imageInfo[0]?.url);
 
   const [descriptionExpand, setDescriptionExpand] = useState(false);
 
@@ -51,25 +43,77 @@ const ProductView = (props: ProductViewProps) => {
   };
 
   useEffect(() => {
-    setPreviewImg(product.image01);
+    setPreviewImg(product?.imageInfo[0]?.url);
     setQuantity(1);
     setColor('');
     setSize('');
   }, [product]);
 
-  //   const check = () => {
-  //     if (color === undefined) {
-  //       alert('Vui lòng chọn màu sắc!');
-  //       return false;
-  //     }
-
-  //     if (size === undefined) {
-  //       alert('Vui lòng chọn kích cỡ!');
-  //       return false;
-  //     }
-
-  //     return true;
-  //   };
+  const check = () => {
+    if (color === '') {
+      alert('Vui lòng chọn màu sắc!');
+      return false;
+    }
+    if (size === '') {
+      alert('Vui lòng chọn kích cỡ!');
+      return false;
+    }
+    return true;
+  };
+  const addToCart = () => {
+    if (check()) {
+      let newItem = {
+        image: product?.imageInfo[0].url,
+        name: product?.name,
+        slug: product?.slug,
+        color: color,
+        size: size,
+        price: product?.price,
+        quantity: quantity,
+      };
+      if (dispatch(cartActions.addItem(newItem))) {
+        toast.success('Thêm vào giỏ hàng thành công', {
+          position: 'top-center',
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          // toastId: 1,
+        });
+      } else {
+        toast.error('Thêm vào giỏ hàng thất bại thử lại sau', {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    }
+  };
+  const goToCart = () => {
+    if (check()) {
+      let newItem = {
+        image: product?.imageInfo[0].url,
+        name: product?.name,
+        slug: product?.slug,
+        color: color,
+        size: size,
+        price: product?.price,
+        quantity: quantity,
+      };
+      if (dispatch(cartActions.addItem(newItem))) {
+        dispatch(productActions.setClassName(''));
+        history.push('/cart');
+      } else {
+        alert('Fail');
+      }
+    }
+  };
 
   return (
     <div className='product'>
@@ -77,15 +121,15 @@ const ProductView = (props: ProductViewProps) => {
         <div className='product__images__list'>
           <div
             className='product__images__list__item'
-            onClick={() => setPreviewImg(product.image01)}
+            onClick={() => setPreviewImg(product?.imageInfo[0]?.url)}
           >
-            <img src={product.image01} alt='' />
+            <img src={product.imageInfo[0]?.url} alt='' />
           </div>
           <div
             className='product__images__list__item'
-            onClick={() => setPreviewImg(product.image02)}
+            onClick={() => setPreviewImg(product?.imageInfo[1]?.url)}
           >
-            <img src={product.image02} alt='' />
+            <img src={product.imageInfo[1]?.url} alt='' />
           </div>
         </div>
         <div className='product__images__main'>
@@ -97,7 +141,7 @@ const ProductView = (props: ProductViewProps) => {
           <div className='product-description__title'>Chi tiết sản phẩm</div>
           <div
             className='product-description__content'
-            dangerouslySetInnerHTML={{ __html: product.description }}
+            dangerouslySetInnerHTML={{ __html: product.description as string }}
           ></div>
           <div className='product-description__toggle'>
             <Button
@@ -110,22 +154,22 @@ const ProductView = (props: ProductViewProps) => {
         </div>
       </div>
       <div className='product__info'>
-        <h1 className='product__info__title'>{product.title}</h1>
+        <h1 className='product__info__title'>{product.name}</h1>
         <div className='product__info__item'>
           <span className='product__info__item__price'>{product.price}</span>
         </div>
         <div className='product__info__item'>
           <div className='product__info__item__title'>Màu sắc</div>
           <div className='product__info__item__list'>
-            {product.colors.map((item: any, index: number) => (
+            {product.colorInfo.map((item: any, index: number) => (
               <div
                 key={index}
                 className={`product__info__item__list__item ${
-                  color === item ? 'active' : ''
+                  color === item.name ? 'active' : ''
                 }`}
-                onClick={() => setColor(item)}
+                onClick={() => setColor(item.name)}
               >
-                <div className={`circle bg-${item}`}></div>
+                <div className={`circle bg-${item.code}`}></div>
               </div>
             ))}
           </div>
@@ -133,16 +177,16 @@ const ProductView = (props: ProductViewProps) => {
         <div className='product__info__item'>
           <div className='product__info__item__title'>Kích cỡ</div>
           <div className='product__info__item__list'>
-            {product.size.map((item: any, index: number) => (
+            {product.sizeInfo?.map((item: Size, index: number) => (
               <div
                 key={index}
                 className={`product__info__item__list__item ${
-                  size === item ? 'active' : ''
+                  size === item.name ? 'active' : ''
                 }`}
-                onClick={() => setSize(item)}
+                onClick={() => setSize(item.name)}
               >
                 <span className='product__info__item__list__item__size'>
-                  {item}
+                  {item.name}
                 </span>
               </div>
             ))}
@@ -169,8 +213,20 @@ const ProductView = (props: ProductViewProps) => {
           </div>
         </div>
         <div className='product__info__item'>
-          <Button onClick={() => {}}>thêm vào giỏ</Button>
-          <Button onClick={() => {}}>mua ngay</Button>
+          <Button
+            onClick={() => {
+              addToCart();
+            }}
+          >
+            thêm vào giỏ
+          </Button>
+          <Button
+            onClick={() => {
+              goToCart();
+            }}
+          >
+            mua ngay
+          </Button>
         </div>
       </div>
       <div
@@ -181,7 +237,7 @@ const ProductView = (props: ProductViewProps) => {
         <div className='product-description__title'>Chi tiết sản phẩm</div>
         <div
           className='product-description__content'
-          dangerouslySetInnerHTML={{ __html: product.description }}
+          dangerouslySetInnerHTML={{ __html: product.description as string }}
         ></div>
         <div className='product-description__toggle'>
           <Button

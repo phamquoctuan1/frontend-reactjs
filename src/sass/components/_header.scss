@@ -5,7 +5,7 @@
     left: 0;
     width: 100%;
     z-index: 99;
-    height: $header-height;
+    height: 150px;
     transition: height 0.3s ease;
 
     @include tablet {
@@ -83,6 +83,7 @@
                 @include tablet {
                     margin-left: 10px;
                 }
+                
                 img{
                     border-radius:50% ;
                     width: 38px;

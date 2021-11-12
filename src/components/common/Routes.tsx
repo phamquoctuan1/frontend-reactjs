@@ -8,7 +8,7 @@ import { Route, Switch } from 'react-router-dom';
 import Cart from '../../features/cart';
 import Catalog from '../../features/catalog';
 import Home from '../../features/home';
-import Product from '../../features/product';
+import ProductPage from '../../features/product';
 
 export function Routes() {
   return (
@@ -17,7 +17,7 @@ export function Routes() {
         <Home />
       </Route>
       <Route path='/catalog/:slug'>
-        <Product />
+        <ProductPage />
       </Route>
       <Route path='/catalog'>
         <Catalog />

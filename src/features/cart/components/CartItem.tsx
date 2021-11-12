@@ -1,9 +1,11 @@
+import { useAppDispatch } from 'app/hooks';
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { cartActions } from '../cartItemsSlice';
 
 const CartItem = (props: any) => {
   const itemRef = useRef<HTMLDivElement>(null);
-
+  const dispatch = useAppDispatch();
   const [item, setItem] = useState(props.item);
   const [quantity, setQuantity] = useState(props.item.quantity);
 
@@ -14,31 +16,36 @@ const CartItem = (props: any) => {
 
   const updateQuantity = (opt: string) => {
     if (opt === '+') {
-      // dispatch(updateItem({...item, quantity: quantity + 1}))
+      dispatch(cartActions.updateItem({ ...item, quantity: quantity + 1 }));
     }
     if (opt === '-') {
-      // dispatch(updateItem({...item, quantity: quantity - 1 === 0 ? 1 : quantity - 1}))
+      dispatch(
+        cartActions.updateItem({
+          ...item,
+          quantity: quantity - 1 === 0 ? 1 : quantity - 1,
+        })
+      );
     }
   };
 
   // const updateCartItem = () => {
-  //     dispatch(updateItem({...item, quantity: quantity}))
-  // }
+  //   dispatch(cartActions.updateItem({ ...item, quantity: quantity }));
+  // };
 
   const removeCartItem = () => {
     console.log('removeCartItem');
-    // dispatch(removeItem(item))
+    dispatch(cartActions.removeItem(item));
   };
 
   return (
     <div className='cart__item' ref={itemRef}>
       <div className='cart__item__image'>
-        <img src={item.product.image01} alt='' />
+        <img src={item.image} alt='' />
       </div>
       <div className='cart__item__info'>
         <div className='cart__item__info__name'>
           <Link to={`/catalog/${item.slug}`}>
-            {`${item.product.title} - ${item.color} - ${item.size}`}
+            {`${item.name} - ${item.color} - ${item.size}`}
           </Link>
         </div>
         <div className='cart__item__info__price'>{item.price}</div>

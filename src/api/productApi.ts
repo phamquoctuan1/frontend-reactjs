@@ -1,13 +1,17 @@
-import { ListParams, ListResponse, Product } from 'models';
+import { ListParams, ListResponse, Product, ProductResponse } from 'models';
 import axiosClient from './axiosClient';
 
 const productApi = {
   getAll(params: ListParams): Promise<ListResponse<Product>> {
-    const url = '/products';
+    const url = '/product';
     return axiosClient.get(url, { params });
   },
-  getById(id: number): Promise<Product> {
-    const url = `/products/${id}`;
+  search(params: string): Promise<ListResponse<Product>> {
+    const url = '/product/search';
+    return axiosClient.get(url, { params });
+  },
+  getBySlug(slug: string | undefined): Promise<ProductResponse> {
+    const url = `/product/slug/${slug}`;
     return axiosClient.get(url);
   },
 

@@ -1,4 +1,4 @@
-import { User } from "models";
+import { Product, User } from 'models';
 
 export interface PaginationParams {
   _limit: number;
@@ -11,11 +11,15 @@ export interface ListResponse<T> {
   pagination: PaginationParams;
 }
 
+export interface ProductResponse {
+  status: string;
+  data: Product;
+}
 export interface UserRespone {
   accessToken: string;
 }
-export interface UserResponeGoogle{
-  data: User,
+export interface UserResponeGoogle {
+  data: User;
   token: string;
 }
 export interface ListParams {
@@ -25,5 +29,3 @@ export interface ListParams {
   _order?: 'asc' | 'desc';
   [key: string]: any;
 }
-
-
