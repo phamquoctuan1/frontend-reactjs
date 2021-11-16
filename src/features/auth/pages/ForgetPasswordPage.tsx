@@ -13,7 +13,7 @@ import { Helmet } from 'components/common';
 import { InputField } from 'components/FormFields';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
 import authApi from '../../../api/authApi';
@@ -43,6 +43,8 @@ const schema = yup.object({
     .required('Email không được bỏ trống'),
 });
 export default function ForgetPasswordPage() {
+  const history = useHistory();
+  const user = localStorage.getItem('access_token');
   const classes = useStyles();
   const [error, setError] = useState<string>('');
   const {
@@ -70,10 +72,8 @@ export default function ForgetPasswordPage() {
         }
       );
     } catch (err) {
-      if (!!err) {
-        let msg = (err as AxiosError).response?.data.message;
-        setError(msg);
-      }
+      let msg = (err as AxiosError).response?.data.message;
+      setError(msg);
     }
   };
   useEffect(() => {
@@ -81,6 +81,12 @@ export default function ForgetPasswordPage() {
       reset({ email: '' });
     }
   }, [isSubmitSuccessful, reset]);
+
+  useEffect(() => {
+    if (user) {
+      history.push('/');
+    }
+  }, [user, history]);
   return (
     <Helmet title='Quên mật khẩu'>
       <div className={classes.root}>

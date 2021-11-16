@@ -9,7 +9,7 @@ import {
 import authApi from 'api/authApi';
 import { Helmet } from 'components/common';
 import { User } from 'models';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { covertBase64 } from 'utils/convertBase64';
 import RegisterForm from '../components/RegisterForm';
@@ -37,6 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export default function RegisterPage() {
   const history = useHistory();
+  const user = localStorage.getItem('access_token');
   //   const dispatch = useAppDispatch();
   const [error, setError] = useState<string>('');
   const classes = useStyles();
@@ -76,6 +77,11 @@ export default function RegisterPage() {
     }
   };
 
+  useEffect(() => {
+    if (user) {
+      history.push('/');
+    }
+  }, [user, history]);
   return (
     <Helmet title='Đăng ký'>
       <div className={classes.root}>

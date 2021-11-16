@@ -14,6 +14,10 @@ function* handleLogin(payload: LoginPayload) {
         'access_token',
         JSON.stringify(resToken.accessToken)
       );
+      localStorage.setItem(
+        'refresh_token',
+        JSON.stringify(resToken.refreshToken)
+      );
       const resUser: User = yield call(authApi.getUser, resToken.accessToken);
       yield put(authActions.getUserSuccess(resUser));
       yield put(authActions.loginSuccess(resUser));
@@ -46,10 +50,20 @@ function* handleLoginGoole(payload: LoginGooglePayload) {
 }
 function* getUser(payload: string) {
   const resUser: User = yield call(authApi.getUser, payload);
-  yield put(authActions.getUserSuccess(resUser));
+  if (resUser) yield put(authActions.getUserSuccess(resUser));
+  else {
+    yield fork(handleLogout);
+  }
+  // else {
+  //   const response: UserRespone = yield call(authApi.refreshToken, {
+  //     token: payload,
+  //   });
+  //   localStorage.setItem('access_token', JSON.stringify(response.accessToken));
+  // }
 }
 function* handleLogout() {
   yield localStorage.removeItem('access_token');
+  yield localStorage.removeItem('refresh_token');
   yield put(push('/'));
 }
 

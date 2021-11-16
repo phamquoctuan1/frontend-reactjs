@@ -3,17 +3,34 @@ import { useAppSelector } from 'app/hooks';
 import { Helmet } from 'components/common';
 import Button from 'components/common/Button';
 import { selectCurrentUser } from 'features/auth/authSlice';
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { selectValueCart } from './cartItemsSlice';
 import CartItem from './components/CartItem';
-
+import queryString from 'query-string';
 export default function Cart() {
+  const { search } = useLocation();
+  const { resultCode, message } = queryString.parse(search);
+
+  useEffect(() => {
+    if (resultCode) {
+      if (Number(resultCode) === 0) {
+        alert(message);
+        localStorage.removeItem('cartItems');
+      } else {
+        alert(message);
+      }
+    }
+  }, [resultCode, message]);
+
   const cartItems = useAppSelector(selectValueCart);
   const [totalProducts, setTotalProducts] = useState(0);
-
   const [totalPrice, setTotalPrice] = useState(0);
   const user = useAppSelector(selectCurrentUser);
+ 
+  const handleCheckOut = () => {
+    alert('Không có sản phẩm nào trong giỏ hàng vui lòng thêm để thanh toán');
+  };
   useEffect(() => {
     setTotalPrice(
       cartItems.reduce(
@@ -38,7 +55,27 @@ export default function Cart() {
           <div className='cart__info__btn'>
             {user ? (
               <Box mb={2}>
-                <Button size='block'>Đặt hàng</Button>
+                {totalPrice > 0 ? (
+                  <Link to='/checkout'>
+                    <Button
+                      size='block'
+                      // onClick={() => {
+                      //   handleCheckOut();
+                      // }}
+                    >
+                      Thanh toán
+                    </Button>
+                  </Link>
+                ) : (
+                  <Button
+                    size='block'
+                    onClick={() => {
+                      handleCheckOut();
+                    }}
+                  >
+                    Thanh toán
+                  </Button>
+                )}
               </Box>
             ) : (
               <Box mb={3}>

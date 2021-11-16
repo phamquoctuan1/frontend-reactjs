@@ -1,4 +1,10 @@
-import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@material-ui/core';
+import {
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  Select,
+} from '@material-ui/core';
 import React from 'react';
 import { Control, useController } from 'react-hook-form';
 export interface SelectOption {
@@ -13,7 +19,13 @@ export interface SelectFieldProps {
   options: SelectOption[];
 }
 
-export function SelectField({ name, control, label, options, disabled }: SelectFieldProps) {
+export function SelectField({
+  name,
+  control,
+  label,
+  options,
+  disabled,
+}: SelectFieldProps) {
   const {
     field: { value, onChange, onBlur },
     fieldState: { invalid, error },
@@ -24,11 +36,11 @@ export function SelectField({ name, control, label, options, disabled }: SelectF
   return (
     <FormControl
       disabled={disabled}
-      margin="normal"
+      margin='normal'
       error={invalid}
-      size="small"
+      size='small'
       fullWidth
-      variant="outlined"
+      variant='outlined'
     >
       <InputLabel id={`${name}_label`}>{label}</InputLabel>
       <Select

@@ -63,6 +63,7 @@ const ProductView = ({ product }: ProductViewProps) => {
   const addToCart = () => {
     if (check()) {
       let newItem = {
+        productId: product?.id,
         image: product?.imageInfo[0].url,
         name: product?.name,
         slug: product?.slug,
@@ -98,6 +99,7 @@ const ProductView = ({ product }: ProductViewProps) => {
   const goToCart = () => {
     if (check()) {
       let newItem = {
+        productId: product?.id,
         image: product?.imageInfo[0].url,
         name: product?.name,
         slug: product?.slug,

@@ -66,16 +66,20 @@ export default function RegisterForm({
   return (
     <Box maxWidth={350}>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
-        <InputField name='userName' control={control} label='Tên đăng nhập' />
+        <InputField
+          name='userName'
+          control={control}
+          label='Tên đăng nhập (*)'
+        />
         <InputField
           name='password'
           control={control}
-          label='Mật khẩu'
+          label='Mật khẩu (*)'
           type='password'
         />
-        <InputField name='name' control={control} label='Họ tên' />
-        <InputField name='email' control={control} label='Email' />
-        <InputField name='phone' control={control} label='Số điện thoại' />
+        <InputField name='name' control={control} label='Họ tên (*)' />
+        <InputField name='email' control={control} label='Email (*)' />
+        <InputField name='phone' control={control} label='Số điện thoại (*)' />
         <InputField name='address' control={control} label='Địa chỉ' />
         <FileInputField
           name='picture'
@@ -94,6 +98,10 @@ export default function RegisterForm({
             {isSubmitting && <CircularProgress size={16} color='primary' />}{' '}
             Đăng ký
           </Button>
+        </Box>
+
+        <Box mt={3}>
+          <h3>Chú thích: (*) Không thể bỏ trống</h3>
         </Box>
       </form>
     </Box>

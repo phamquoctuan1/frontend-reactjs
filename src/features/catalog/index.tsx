@@ -1,34 +1,44 @@
+import { Box, makeStyles } from '@material-ui/core';
 import categoryApi from 'api/categoryApi';
 import productApi from 'api/productApi';
 import { useAppDispatch } from 'app/hooks';
-import {
-  Grid,
-  Helmet,
-  ProductCard,
-  Section,
-  SectionBody,
-} from 'components/common';
+import { Helmet, Section, SectionBody } from 'components/common';
 import Button from 'components/common/Button';
 import CheckBox from 'components/common/CheckBox';
+import SearchForm from 'components/common/SearchForm';
 import { Category, Color, Product, Size } from 'models';
 import React, { useEffect, useRef, useState } from 'react';
 import { colors } from 'utils/product-color';
 import { size } from 'utils/product-size';
+import InfinityList from './components/InfinityList';
 export interface initialFilterType {
-  _page?: 0;
-  _limit?: 12;
+  _page?: number;
+  _limit?: number;
+  name: string | undefined;
   category: string[];
   color: string[];
   size: string[];
 }
 const initialFilter: initialFilterType = {
+  name: undefined,
   _page: 0,
-  _limit: 12,
+  _limit: 30,
   category: [],
   color: [],
   size: [],
 };
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+}));
 export default function Catalog() {
+  const classes = useStyles();
   const [productList, setProductList] = useState<Product[]>();
   const dispatch = useAppDispatch();
   const [filter, setFilter] = useState(initialFilter);
@@ -84,6 +94,10 @@ export default function Catalog() {
     setFilter({ ...filter, size: newSize });
   };
 
+  const handleSearchSubmit = async (formValues: any) => {
+    setFilter({ ...filter, name: formValues.name });
+  };
+
   useEffect(() => {
     const fetchProductList = async () => {
       try {
@@ -95,7 +109,6 @@ export default function Catalog() {
     };
     fetchProductList();
   }, [filter, dispatch]);
-
   return (
     <Helmet title='Sản phẩm'>
       <div className='catalog'>
@@ -107,6 +120,13 @@ export default function Catalog() {
             <i className='bx bx-left-arrow-alt'></i>
           </div>
           <div className='catalog__filter__widget'>
+            <div className='catalog__filter__widget__title'>
+              <SearchForm
+                initialValues={{ name: '' }}
+                onSubmit={handleSearchSubmit}
+              />
+            </div>
+
             <div className='catalog__filter__widget__title'>
               danh mục sản phẩm
             </div>
@@ -182,22 +202,28 @@ export default function Catalog() {
           </Button>
         </div>
         <div className='catalog__content'>
-          <Section>
-            <SectionBody>
-              <Grid col={4} mdCol={2} smCol={1} gap={20}>
-                {productList?.map((item, index) => (
-                  <ProductCard
-                    key={index}
-                    img01={item.imageInfo[0]?.url}
-                    img02={item.imageInfo[1]?.url}
-                    name={item.name}
-                    price={Number(item.price)}
-                    slug={item.slug}
-                  />
-                ))}
-              </Grid>
-            </SectionBody>
-          </Section>
+          {productList?.length !== 0 ? (
+            <Section>
+              <SectionBody>
+                <InfinityList product={productList} />
+              </SectionBody>
+            </Section>
+          ) : (
+            <Section>
+              <SectionBody>
+                <Box className={classes.root}>
+                  <h1>Không tìm thấy sản phẩm nào theo yêu cầu</h1>
+                  <Button
+                    onClick={() => {
+                      setFilter(initialFilter);
+                    }}
+                  >
+                    Quay lại
+                  </Button>
+                </Box>
+              </SectionBody>
+            </Section>
+          )}
         </div>
       </div>
     </Helmet>

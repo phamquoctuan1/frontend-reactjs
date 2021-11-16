@@ -3,17 +3,10 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { authActions, selectCurrentUser } from 'features/auth/authSlice';
 import { selectValueCart } from 'features/cart/cartItemsSlice';
-import {
-  productActions,
-  selectProductFilter,
-} from 'features/product/productSlice';
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../../assets/images/Logo-2.png';
 import MenuUser from './MenuUser';
-import SearchForm from './SearchForm';
-import { toast } from 'react-toastify';
-
 const mainNav = [
   {
     display: 'Trang chủ',
@@ -40,7 +33,6 @@ export const Header = () => {
   const { pathname } = useLocation();
   const dispatch = useAppDispatch();
   const activeNav = mainNav.findIndex((e) => e.path === pathname);
-
   const token = JSON.parse(localStorage.getItem('access_token') || '{}');
 
   const headerRef = useRef<HTMLDivElement>(null);
@@ -65,35 +57,17 @@ export const Header = () => {
     };
   }, []);
   const menuLeft = useRef<HTMLDivElement>(null);
-
   const menuToggle = () => menuLeft.current?.classList.toggle('active');
   useEffect(() => {
     const task = () => {
-      if (token) {
+      if (Boolean(token)) {
         return dispatch(authActions.getUser(token));
       }
-      return;
+      return localStorage.removeItem('access_token');
     };
     task();
   }, [token, dispatch]);
-  const filter = useAppSelector(selectProductFilter);
-  const handleSearchSubmit = async (formValues: any) => {
-    setTimeout(() => {
-      dispatch(productActions.setFilter(formValues));
-    }, 2000);
-    toast('Loading...', {
-      position: 'top-center',
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  };
-  useEffect(() => {
-    dispatch(productActions.fetchProductList(filter));
-  }, [filter, dispatch]);
+
   return (
     <div className='header' ref={headerRef}>
       <div className='container'>
@@ -125,16 +99,14 @@ export const Header = () => {
             ))}
           </div>
           <div className='header__menu__right'>
-            <div className='header__menu__item header__menu__right__item'>
-              <SearchForm
-                initialValues={{ name: '' }}
-                onSubmit={handleSearchSubmit}
-              />
-            </div>
+            <div className='header__menu__item header__menu__right__item'></div>
             <div className='header__menu__item header__menu__right__item'>
               <Link to='/cart'>
-                <Badge color='secondary' badgeContent={totalProducts} showZero>
-                  <ShoppingCartIcon />
+                <Badge
+                  color='secondary'
+                  badgeContent={totalProducts && totalProducts}
+                >
+                  <ShoppingCartIcon fontSize='large' />
                 </Badge>
               </Link>
             </div>

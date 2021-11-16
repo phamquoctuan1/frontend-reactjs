@@ -3,12 +3,14 @@ import LoginPage from 'features/auth/pages/LoginPage';
 import Profile from 'features/auth/pages/Profile';
 import RegisterPage from 'features/auth/pages/RegisterPage';
 import ResetPasswordPage from 'features/auth/pages/ResetPasswordPage';
+import CheckoutPage from 'features/checkout';
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Cart from '../../features/cart';
 import Catalog from '../../features/catalog';
 import Home from '../../features/home';
 import ProductPage from '../../features/product';
+import CircularStatic from './Loading';
 
 export function Routes() {
   return (
@@ -19,7 +21,7 @@ export function Routes() {
       <Route path='/catalog/:slug'>
         <ProductPage />
       </Route>
-      <Route path='/catalog'>
+      <Route exact path='/catalog'>
         <Catalog />
       </Route>
       <Route path='/cart'>
@@ -39,6 +41,12 @@ export function Routes() {
       </Route>
       <Route path='/profile'>
         <Profile />
+      </Route>
+      <Route exact path='/verify/account/:id/:token'>
+        <CircularStatic />
+      </Route>
+      <Route path='/checkout'>
+        <CheckoutPage />
       </Route>
     </Switch>
   );

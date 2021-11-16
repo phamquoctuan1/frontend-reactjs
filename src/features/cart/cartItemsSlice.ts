@@ -6,6 +6,7 @@ const items: any[] =
     : [];
 
 export interface ValueCart {
+  productId: string | number;
   image: string;
   slug: string;
   name: string;
@@ -30,6 +31,7 @@ export const cartItemsSlice = createSlice({
       const newItem = action.payload;
       const duplicate = state.value.filter(
         (e: ValueCart) =>
+          e.productId === newItem.productId &&
           e.slug === newItem.slug &&
           e.color === newItem.color &&
           e.size === newItem.size &&
@@ -39,6 +41,7 @@ export const cartItemsSlice = createSlice({
       if (duplicate.length > 0) {
         state.value = state.value.filter(
           (e: ValueCart) =>
+            e.productId !== newItem.productId ||
             e.slug !== newItem.slug ||
             e.color !== newItem.color ||
             e.size !== newItem.size
@@ -53,6 +56,7 @@ export const cartItemsSlice = createSlice({
             name: newItem.name,
             image: newItem.image,
             price: newItem.price,
+            productId: newItem.productId,
             quantity: newItem.quantity + duplicate[0].quantity,
           },
         ];
@@ -81,6 +85,7 @@ export const cartItemsSlice = createSlice({
       const newItem = action.payload;
       const item = state.value.filter(
         (e: ValueCart) =>
+          e.productId === newItem.productId &&
           e.slug === newItem.slug &&
           e.color === newItem.color &&
           e.size === newItem.size &&
@@ -90,6 +95,7 @@ export const cartItemsSlice = createSlice({
       if (item.length > 0) {
         state.value = state.value.filter(
           (e: ValueCart) =>
+            e.productId !== newItem.productId ||
             e.slug !== newItem.slug ||
             e.color !== newItem.color ||
             e.size !== newItem.size ||
@@ -106,6 +112,7 @@ export const cartItemsSlice = createSlice({
             image: newItem.image,
             size: newItem.size,
             price: newItem.price,
+            productId: newItem.productId,
             quantity: newItem.quantity,
           },
         ];

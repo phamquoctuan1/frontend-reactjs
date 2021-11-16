@@ -17,6 +17,7 @@ export interface ProductResponse {
 }
 export interface UserRespone {
   accessToken: string;
+  refreshToken?: string;
 }
 export interface UserResponeGoogle {
   data: User;

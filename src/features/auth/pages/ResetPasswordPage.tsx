@@ -10,7 +10,7 @@ import {
 import { Alert } from '@material-ui/lab';
 import { Helmet } from 'components/common';
 import { InputField } from 'components/FormFields';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useHistory, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -40,12 +40,13 @@ const schema = yup.object({
     .min(8, 'Mật khẩu phải trên 8 ký tự')
     .required('Mật khẩu không thể bỏ trống'),
 });
-interface ParamTypes {
+export interface ParamTypes {
   id: string;
   token: string;
 }
 
 export default function ForgetPasswordPage() {
+  const user = localStorage.getItem('access_token');
   const history = useHistory();
   const { id, token } = useParams<ParamTypes>();
   const classes = useStyles();
@@ -61,7 +62,6 @@ export default function ForgetPasswordPage() {
     try {
       setError('');
       data = { ...data, id, token };
-      console.log(data);
       await authApi.recovertUser(data);
       toast.success('Khôi phục mật khẩu thành công', {
         position: 'top-right',
@@ -79,6 +79,11 @@ export default function ForgetPasswordPage() {
       );
     }
   };
+  useEffect(() => {
+    if (user) {
+      history.push('/');
+    }
+  }, [user, history]);
   return (
     <Helmet title='Quên mật khẩu'>
       <div className={classes.root}>

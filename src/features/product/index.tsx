@@ -54,7 +54,7 @@ export default function ProductPage() {
   }
 
   return (
-    <Helmet title='Sản phẩm'>
+    <Helmet title={`${product.name}`}>
       <Section>
         <SectionBody>
           <ProductView product={product} />

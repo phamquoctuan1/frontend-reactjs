@@ -17,7 +17,7 @@ const initialState: ProductState = {
   list: [],
   filter: {
     _page: 0,
-    _limit: 12,
+    _limit: 24,
     category: undefined,
     color: undefined,
     size: undefined,

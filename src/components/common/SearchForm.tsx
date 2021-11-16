@@ -9,8 +9,8 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       '& .MuiTextField-root': {
-        margin: theme.spacing(1),
-        width: 250,
+        margin: theme.spacing(-1),
+        width: 160,
       },
     },
     search: {

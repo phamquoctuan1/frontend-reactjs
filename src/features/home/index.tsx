@@ -28,15 +28,17 @@ export default function Home() {
   useEffect(() => {
     dispatch(productActions.fetchProductList(filter));
   }, [filter, dispatch]);
-
+  const productlist1 = product.slice(0, 4);
+  const productlist2 = product.slice(4, 12);
+  const productlist3 = product.slice(12, 24);
   return (
     <Helmet title='Trang chủ'>
       {/* hero slider */}
       <HeroSlider
         data={heroSliderData}
         control={true}
-        auto={false}
-        timeOut={5000}
+        auto={true}
+        timeOut={3000}
       />
       {/* end hero slider */}
 
@@ -63,7 +65,7 @@ export default function Home() {
         <SectionTitle>top sản phẩm bán chạy trong tuần</SectionTitle>
         <SectionBody>
           <Grid col={4} mdCol={2} smCol={1} gap={20}>
-            {product?.map((item, index) => (
+            {productlist1?.map((item, index) => (
               <ProductCard
                 key={index}
                 img01={item.imageInfo[0]?.url}
@@ -83,7 +85,7 @@ export default function Home() {
         <SectionTitle>sản phẩm mới</SectionTitle>
         <SectionBody>
           <Grid col={4} mdCol={2} smCol={1} gap={20}>
-            {product?.map((item, index) => (
+            {productlist2?.map((item, index) => (
               <ProductCard
                 key={index}
                 img01={item.imageInfo[0]?.url}
@@ -113,7 +115,7 @@ export default function Home() {
         <SectionTitle>phổ biến</SectionTitle>
         <SectionBody>
           <Grid col={4} mdCol={2} smCol={1} gap={20}>
-            {product.map((item, index) => (
+            {productlist3.map((item, index) => (
               <ProductCard
                 key={index}
                 img01={item.imageInfo[0]?.url}
