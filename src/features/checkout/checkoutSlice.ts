@@ -2,24 +2,28 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from 'app/store';
 
 export interface CheckoutState {
+  id: string|number|undefined;
   name: string | undefined;
   address: string | undefined;
   phone: string | undefined;
   city: string | undefined;
   district: string | undefined;
   ward: string | undefined;
+  fee: number | undefined;
 }
 export interface InfoOrder {
   info: CheckoutState;
 }
 const initialState: InfoOrder = {
   info: {
+    id:undefined,
     name: undefined,
     address: undefined,
     phone: undefined,
     city: undefined,
     district: undefined,
     ward: undefined,
+    fee : 0,
   },
 };
 

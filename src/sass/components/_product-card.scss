@@ -2,6 +2,9 @@
     text-align: center;
     margin-bottom: 30px;
 
+
+   
+
     &__image {
         padding-top: 100%;
         position: relative;
@@ -49,6 +52,18 @@
         font-size: 1.5rem;
         font-weight: 600;
         margin-bottom: 10px;
+
+        &__discount{
+            padding: 0px 2px;
+            line-height: 14px;
+            font-size: 12px;
+            font-weight: 400;
+            margin-left: 8px;
+            border: 1px solid rgb(255, 66, 78);
+            border-radius: 2px;
+            background-color:#FFF0F1;
+            color: rgb(255, 66, 78);
+        }
 
         &__old {
             color: $txt-second-color;

@@ -23,6 +23,11 @@ export interface UserResponeGoogle {
   data: User;
   token: string;
 }
+
+export interface PaymentResponse {
+  data?: [];
+  message?: string;
+}
 export interface ListParams {
   _page?: number;
   _limit?: number;

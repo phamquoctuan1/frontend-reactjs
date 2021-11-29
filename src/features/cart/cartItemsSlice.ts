@@ -27,6 +27,9 @@ export const cartItemsSlice = createSlice({
   name: 'cartItems',
   initialState,
   reducers: {
+    clearCart: (state) => {
+      state.value = [];
+    },
     addItem: (state, action) => {
       const newItem = action.payload;
       const duplicate = state.value.filter(

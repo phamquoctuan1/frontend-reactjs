@@ -1,8 +1,6 @@
 import {
   Avatar,
-  Box,
-  Button,
-  Container,
+  Box, Container,
   Divider,
   Grid,
   List,
@@ -11,7 +9,7 @@ import {
   ListItemText,
   makeStyles,
   Paper,
-  Typography,
+  Typography
 } from '@material-ui/core';
 import EmailIcon from '@material-ui/icons/Email';
 import HomeIcon from '@material-ui/icons/Home';
@@ -22,6 +20,7 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { selectCurrentUser } from '../authSlice';
 import ChangePasswordModal from '../components/ChangePasswordModal';
+import ModalOrderReview from '../components/ModalOrderReview';
 import ModalUser from '../components/ModalUser';
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -135,9 +134,8 @@ export default function Profile() {
               <Box className={classes.boxBtn}>
                 <ModalUser title='Sửa thông tin' user={user} />
                 <ChangePasswordModal title='Đổi mật khẩu' user={user} />
-                <Button variant='contained' color='primary'>
-                  Xem đơn hàng đã đặt
-                </Button>
+                <ModalOrderReview title='Xem thông tin đơn hàng' user={user} />
+                
               </Box>
             </Box>
           </Grid>

@@ -31,6 +31,8 @@ export default function Home() {
   const productlist1 = product.slice(0, 4);
   const productlist2 = product.slice(4, 12);
   const productlist3 = product.slice(12, 24);
+
+  
   return (
     <Helmet title='Trang chủ'>
       {/* hero slider */}
@@ -69,9 +71,10 @@ export default function Home() {
               <ProductCard
                 key={index}
                 img01={item.imageInfo[0]?.url}
-                img02={item.imageInfo[0]?.url}
+                img02={item.imageInfo[1]?.url}
                 name={item.name}
                 price={Number(item.price)}
+                discount_price={item.discount_percentage}
                 slug={item.slug}
               />
             ))}
@@ -92,6 +95,7 @@ export default function Home() {
                 img02={item.imageInfo[0]?.url}
                 name={item.name}
                 price={Number(item.price)}
+                discount_price={item.discount_percentage}
                 slug={item.slug}
               />
             ))}
@@ -122,6 +126,7 @@ export default function Home() {
                 img02={item.imageInfo[0]?.url}
                 name={item.name}
                 price={Number(item.price)}
+                discount_price={item.discount_percentage}
                 slug={item.slug}
               />
             ))}

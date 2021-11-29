@@ -45,6 +45,14 @@ const authApi = {
     const url = '/auth/register';
     return axiosClient.post(url, data);
   },
+  getOrderReview(data: any): Promise<any> {
+    const url = `/user/getorder/${data}`;
+    return axiosClient.get(url);
+  },
+  getOrderDetails(data: any): Promise<any> {
+    const url = `/user/getorderdetail/${data}`;
+    return axiosClient.get(url);
+  },
 };
 
 export default authApi;

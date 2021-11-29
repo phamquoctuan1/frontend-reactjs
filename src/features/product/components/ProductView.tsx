@@ -6,10 +6,14 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { productActions } from '../productSlice';
 import { toast } from 'react-toastify';
+import { numberWithCommas } from 'utils';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 export interface ProductViewProps {
   product?: Product;
 }
 const ProductView = ({ product }: ProductViewProps) => {
+  const MySwal = withReactContent(Swal);
   if (product === undefined)
     product = {
       name: '',
@@ -19,6 +23,8 @@ const ProductView = ({ product }: ProductViewProps) => {
       imageInfo: [],
       sizeInfo: [],
       colorInfo: [],
+      promoteInfo: [],
+     discount_percentage:'',
       slug: '',
     };
 
@@ -73,16 +79,21 @@ const ProductView = ({ product }: ProductViewProps) => {
         quantity: quantity,
       };
       if (dispatch(cartActions.addItem(newItem))) {
-        toast.success('Thêm vào giỏ hàng thành công', {
-          position: 'top-center',
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          // toastId: 1,
-        });
+        MySwal.fire(
+          'Thêm vào giỏ hàng thành công!',
+          'Bạn có thể tiếp tục mua hàng!',
+          'success'
+        );
+        // toast.success('Thêm vào giỏ hàng thành công', {
+        //   position: 'top-center',
+        //   autoClose: 1000,
+        //   hideProgressBar: false,
+        //   closeOnClick: true,
+        //   pauseOnHover: true,
+        //   draggable: true,
+        //   progress: undefined,
+        //   // toastId: 1,
+        // });
       } else {
         toast.error('Thêm vào giỏ hàng thất bại thử lại sau', {
           position: 'top-center',
@@ -98,21 +109,19 @@ const ProductView = ({ product }: ProductViewProps) => {
   };
   const goToCart = () => {
     if (check()) {
-      let newItem = {
-        productId: product?.id,
-        image: product?.imageInfo[0].url,
-        name: product?.name,
-        slug: product?.slug,
-        color: color,
-        size: size,
-        price: product?.price,
-        quantity: quantity,
-      };
+     let newItem = {
+       productId: product?.id,
+       image: product?.imageInfo[0].url,
+       name: product?.name,
+       slug: product?.slug,
+       color: color,
+       size: size,
+       price: product?.price,
+       quantity: quantity,
+     };
       if (dispatch(cartActions.addItem(newItem))) {
         dispatch(productActions.setClassName(''));
         history.push('/cart');
-      } else {
-        alert('Fail');
       }
     }
   };
@@ -158,7 +167,9 @@ const ProductView = ({ product }: ProductViewProps) => {
       <div className='product__info'>
         <h1 className='product__info__title'>{product.name}</h1>
         <div className='product__info__item'>
-          <span className='product__info__item__price'>{product.price}</span>
+          <span className='product__info__item__price'>
+            {numberWithCommas(product.price)}
+          </span>
         </div>
         <div className='product__info__item'>
           <div className='product__info__item__title'>Màu sắc</div>

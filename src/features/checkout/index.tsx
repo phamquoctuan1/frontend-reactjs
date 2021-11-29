@@ -1,49 +1,59 @@
 import {
-  Box,
   Button,
-  Container,
-  Step,
-  StepLabel,
-  Stepper,
-  Typography,
+  Container, Typography
 } from '@material-ui/core';
-import { useAppSelector } from 'app/hooks';
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-
-import { selectCheckoutInfo } from './checkoutSlice';
+import { useAppDispatch } from 'app/hooks';
+import { cartActions } from 'features/cart/cartItemsSlice';
+import queryString from 'query-string';
+import React, { useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 import AddressForm from './components/AddressForm';
-import PaymentForm from './components/PaymentForm';
 
-const steps = ['Địa chỉ giao hàng', 'Phương thức thanh toán'];
-
-function getStepContent(step: number) {
-  switch (step) {
-    case 0:
-      return <AddressForm />;
-    case 1:
-      return <PaymentForm />;
-    default:
-      throw new Error('Unknown step');
-  }
-}
 
 export default function CheckoutPage() {
-  const checkoutInfo = useAppSelector(selectCheckoutInfo);
-
-  const [activeStep, setActiveStep] = useState(0);
-
-  const handleNext = () => {
-    if (checkoutInfo.name !== undefined) setActiveStep(activeStep + 1);
-    else alert('Vui lòng điền đầy đủ thông tin và lưu thông tin');
-  };
-
-  const handleBack = () => {
-    setActiveStep(activeStep - 1);
-  };
+ const MySwal = withReactContent(Swal);
+  const dispatch = useAppDispatch();
+    const { search } = useLocation();
+    const { vnp_ResponseCode, resultCode, message } = queryString.parse(search);
+    useEffect(() => {
+      if (resultCode) {
+        if (Number(resultCode) === 0) {
+          dispatch(cartActions.clearCart());
+          MySwal.fire(
+            message as string,
+            'Bạn có thể tiếp tục mua hàng hoặc kiểm tra đơn hàng tại hồ sơ',
+            'success'
+          );
+        } else {
+           MySwal.fire(
+             message as string,
+             'Bạn vui lòng kiểm tra và thanh toán lại đơn hàng',
+             'error'
+           );
+        }
+      }
+      if (vnp_ResponseCode) {
+        if (vnp_ResponseCode === '00') {
+          dispatch(cartActions.clearCart());
+          MySwal.fire(
+            message as string,
+            'Bạn có thể tiếp tục mua hàng hoặc kiểm tra đơn hàng tại hồ sơ',
+            'success'
+          );
+        } else {
+         MySwal.fire(
+           message as string,
+           'Bạn vui lòng kiểm tra và thanh toán lại đơn hàng',
+           'error'
+         );
+        }
+      }
+    }, [resultCode, message, vnp_ResponseCode, dispatch, MySwal]);
 
   return (
-    <Container maxWidth='sm'>
+    <Container maxWidth='lg'>
       <Link to='/cart'>
         <Button variant='contained' color='primary'>
           Quay lại
@@ -51,26 +61,9 @@ export default function CheckoutPage() {
       </Link>
       <Container component='main' maxWidth='sm'>
         <Typography component='h1' variant='h4' align='center'>
-          Thanh toán
-        </Typography>
-        <Stepper activeStep={activeStep}>
-          {steps.map((label) => (
-            <Step key={label}>
-              <StepLabel>{label}</StepLabel>
-            </Step>
-          ))}
-        </Stepper>
-        <React.Fragment>
-          {getStepContent(activeStep)}
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            {activeStep !== 0 && <Button onClick={handleBack}>Back</Button>}
-            {activeStep === steps.length - 1 ? null : (
-              <Button variant='outlined' onClick={handleNext}>
-                Next
-              </Button>
-            )}
-          </Box>
-        </React.Fragment>
+          Thông tin
+        </Typography>   
+            <AddressForm />    
       </Container>
     </Container>
   );

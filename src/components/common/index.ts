@@ -8,3 +8,6 @@ export * from './HeroSlider';
 export * from './Section';
 export * from './PolicyCard';
 export * from '../../features/product/components/ProductCard';
+export * from './Loading'
+export * from './MenuUser'
+export * from './SearchForm'

@@ -1,6 +1,7 @@
 import { useAppDispatch } from 'app/hooks';
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { numberWithCommas } from 'utils';
 import { cartActions } from '../cartItemsSlice';
 
 const CartItem = (props: any) => {
@@ -48,7 +49,9 @@ const CartItem = (props: any) => {
             {`${item.name} - ${item.color} - ${item.size}`}
           </Link>
         </div>
-        <div className='cart__item__info__price'>{item.price}</div>
+        <div className='cart__item__info__price'>
+          {numberWithCommas(item.price)}
+        </div>
         <div className='cart__item__info__quantity'>
           <div className='product__info__item__quantity'>
             <div

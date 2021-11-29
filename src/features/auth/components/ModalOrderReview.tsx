@@ -1,24 +1,15 @@
+
 import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  makeStyles,
-  Paper,
-  Theme,
-  Typography,
+    Button,
+    Container, Grid, makeStyles, Theme
 } from '@material-ui/core';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import Modal from '@material-ui/core/Modal';
 import authApi from 'api/authApi';
-import { useAppDispatch } from 'app/hooks';
+import ReviewOrder from 'features/checkout/components/ReviewOrder';
 import { User } from 'models';
-import React, { useState } from 'react';
-import { toast } from 'react-toastify';
-import { authActions } from '../authSlice';
-import ChangePasswordForm from './ChangePasswordForm';
-
+import React, { useEffect, useState } from 'react';
 const useStyles = makeStyles((theme: Theme) => ({
   modal: {
     display: 'flex',
@@ -27,9 +18,20 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   paper: {
     backgroundColor: theme.palette.background.paper,
-    borderRadius: '10px',
+    borderRadius: '10px ',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
+    height:'600px',
+    overflow: 'auto'
+  },
+  boxImg: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  listItemText: {
+    fontWeight: 'bold',
+    fontSize: theme.spacing(2),
   },
   boxBtn: {
     display: 'flex',
@@ -38,6 +40,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   formEdit: {
     display: 'flex',
+
     justifyContent: 'center',
   },
 }));
@@ -47,42 +50,25 @@ export interface ModalUserProps {
   user?: User;
 }
 
-export default function ChangePasswordModal({ user, title }: ModalUserProps) {
-  const dispatch = useAppDispatch();
+export default function ModalOrderReview({ user, title }: ModalUserProps) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-
+    const [orderReview, setOrderReview] = useState();
+    
   const handleOpen = () => {
     setOpen(true);
   };
-
   const handleClose = () => {
     setOpen(false);
   };
+ useEffect(() => {
+     const getOrder = async() => {
+        const res = await authApi.getOrderReview(user?.id);
+        setOrderReview(res);
+     }
+     getOrder();
+ }, [user?.id]);
 
-  const initialValues: User = {
-    id: user?.id,
-    password: '',
-    passwordConfirmation: '',
-  };
-  const handleSubmit = async (formValues: User) => {
-    try {
-      delete formValues.passwordConfirmation;
-      console.log(formValues);
-      const res = await authApi.updateUser(formValues);
-      dispatch(authActions.getUserSuccess(res.data));
-      toast.success(res.message, {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-      setOpen(false);
-    } catch (error) {}
-  };
   return (
     <div>
       <Button
@@ -109,19 +95,7 @@ export default function ChangePasswordModal({ user, title }: ModalUserProps) {
           <Container maxWidth='sm' className={classes.paper}>
             <Grid container spacing={0}>
               <Grid item xs={12}>
-                <Paper elevation={0}>
-                  <Box mt={2} mb={2}>
-                    <Typography variant='h3' component='h3' align='center'>
-                      Đổi mật khẩu
-                    </Typography>
-                  </Box>
-                </Paper>
-                <Paper className={classes.formEdit}>
-                  <ChangePasswordForm
-                    initialValues={initialValues}
-                    onSubmit={handleSubmit}
-                  />
-                </Paper>
+                <ReviewOrder data={orderReview} />
               </Grid>
             </Grid>
           </Container>

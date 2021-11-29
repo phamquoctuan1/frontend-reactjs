@@ -8,9 +8,13 @@ import CheckBox from 'components/common/CheckBox';
 import SearchForm from 'components/common/SearchForm';
 import { Category, Color, Product, Size } from 'models';
 import React, { useEffect, useRef, useState } from 'react';
+import InputRange from 'react-input-range';
+import { numberWithCommas } from 'utils';
 import { colors } from 'utils/product-color';
 import { size } from 'utils/product-size';
+import '../../assets/css/index.css';
 import InfinityList from './components/InfinityList';
+
 export interface initialFilterType {
   _page?: number;
   _limit?: number;
@@ -18,6 +22,7 @@ export interface initialFilterType {
   category: string[];
   color: string[];
   size: string[];
+  price?: number;
 }
 const initialFilter: initialFilterType = {
   name: undefined,
@@ -26,6 +31,7 @@ const initialFilter: initialFilterType = {
   category: [],
   color: [],
   size: [],
+  price:0
 };
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,11 +44,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 export default function Catalog() {
+  const priceSearchTimeoutRef = useRef<any>(null)
   const classes = useStyles();
   const [productList, setProductList] = useState<Product[]>();
   const dispatch = useAppDispatch();
   const [filter, setFilter] = useState(initialFilter);
   const [category, setCategory] = useState<Category[]>();
+  const [price, setPrice] = useState(100000)
   useEffect(() => {
     const getCategory = async () => {
       try {
@@ -93,10 +101,23 @@ export default function Catalog() {
     }
     setFilter({ ...filter, size: newSize });
   };
+  const handleOnchangePrice = (value: any) => {
+   
+    if (priceSearchTimeoutRef.current){
+      clearTimeout(priceSearchTimeoutRef.current);
+    }
+
+    priceSearchTimeoutRef.current = setTimeout(() => {
+          setPrice(value);
+          setFilter({ ...filter, price: value });
+    },100)
+     
+  }
 
   const handleSearchSubmit = async (formValues: any) => {
     setFilter({ ...filter, name: formValues.name });
   };
+
 
   useEffect(() => {
     const fetchProductList = async () => {
@@ -185,6 +206,19 @@ export default function Catalog() {
                   />
                 </div>
               ))}
+            </div>
+          </div>
+
+          <div className='catalog__filter__widget'>
+            <div className='catalog__filter__widget__title'>Giá từ</div>
+            <div className='catalog__filter__widget__content'>
+              <InputRange
+                maxValue={300000}
+                minValue={100000}
+                formatLabel={(value) => numberWithCommas(value)}
+                value={price}
+                onChange={(value) => handleOnchangePrice(value)}
+              />
             </div>
           </div>
 

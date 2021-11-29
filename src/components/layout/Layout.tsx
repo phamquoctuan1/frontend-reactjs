@@ -17,7 +17,6 @@ export function Layout() {
             </div>
             <Footer />
             <ProductViewModal />
-           
           </div>
         )}
       />

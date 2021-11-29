@@ -1,7 +1,7 @@
 import { useAppDispatch } from 'app/hooks';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { numberWithCommas } from 'utils';
+import { calculatorPromotePercentage, numberWithCommas } from 'utils';
 import Button from '../../../components/common/Button';
 import { productActions } from '../productSlice';
 
@@ -11,6 +11,7 @@ export interface ProductCardProps {
   name?: string;
   price?: number;
   slug?: string;
+  discount_price?: string;
 }
 
 export const ProductCard = (props: ProductCardProps) => {
@@ -29,9 +30,12 @@ export const ProductCard = (props: ProductCardProps) => {
         </div>
         <h3 className='product-card__name'>{props.name}</h3>
         <div className='product-card__price'>
-          {numberWithCommas(props.price)}
+          {calculatorPromotePercentage(props.price, props.discount_price)}
+          <span className='product-card__price__discount'>
+            {props.discount_price}
+          </span>
           <div className='product-card__price__old'>
-            <del>{399000}</del>
+            <del>{numberWithCommas(props.price)}</del>
           </div>
         </div>
       </Link>

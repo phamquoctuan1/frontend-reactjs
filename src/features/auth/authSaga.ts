@@ -34,6 +34,7 @@ function* handleLoginGoole(payload: LoginGooglePayload) {
     if (res) {
       localStorage.setItem('access_token', JSON.stringify(res.token));
       const currentUser = {
+        id: res.data.id,
         name: res.data.name,
         email: res.data.email,
         picture: res.data.picture,
