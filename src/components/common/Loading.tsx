@@ -8,7 +8,8 @@ import clsx from 'clsx';
 import { ParamTypes } from 'features/auth/pages/ResetPasswordPage';
 import React, { useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -46,6 +47,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default function CircularIntegration() {
+ const MySwal = withReactContent(Swal);
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -56,27 +58,19 @@ export default function CircularIntegration() {
   });
 
   const handleButtonClick = () => {
+ 
     if (!loading) {
       setSuccess(false);
       setLoading(true);
       setTimeout(async () => {
         try {
           const data = { id, token };
-          await authApi.activeUser(data);
-          toast.success('Kích hoạt tài khoản thành công', {
-            position: 'top-right',
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
+          const response = await authApi.activeUser(data);
+          MySwal.fire('Thành công!', response.message, 'success');
           history.push('/login');
         } catch (err) {
           let msg = (err as AxiosError).response?.data.message;
-          alert(msg);
-          history.push('/login');
+          MySwal.fire('Thất bại!', msg, 'error');
         }
         setSuccess(true);
         setLoading(false);

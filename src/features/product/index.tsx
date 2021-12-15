@@ -6,8 +6,8 @@ import {
   ProductCard,
   Section,
   SectionBody,
-  SectionTitle,
-} from 'components/common';
+  SectionTitle
+} from 'components/Common';
 import { ProductResponse } from 'models';
 import React, { useEffect, useState } from 'react';
 import { Redirect, useParams } from 'react-router-dom';
@@ -17,7 +17,7 @@ import {
   productActions,
   selectProduct,
   selectProductFilter,
-  selectProductList,
+  selectProductList
 } from './productSlice';
 
 export default function ProductPage() {
@@ -29,7 +29,7 @@ export default function ProductPage() {
   const [filter, setFilter] = useState(filterStore);
   const productList = useAppSelector(selectProductList);
   useEffect(() => {
-    setFilter({ _limit: 8, _page: 0 });
+    setFilter({ _limit: 8, _page: 1 });
   }, []);
   useEffect(() => {
     dispatch(productActions.fetchProductList(filter));
@@ -70,6 +70,7 @@ export default function ProductPage() {
                 img01={item.imageInfo[0]?.url}
                 img02={item.imageInfo[1]?.url}
                 name={item.name}
+                discount_price={item.discount_percentage}
                 price={Number(item.price)}
                 slug={item.slug}
               />

@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { AxiosError } from 'axios';
-import { Helmet } from 'components/common';
+import { Helmet } from 'components/Common';
 import { InputField } from 'components/FormFields';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';

@@ -24,7 +24,7 @@ export interface Product {
   id?: number;
   name: string;
   price: number;
-  amount: number;
+  quantity: number;
   discount_percentage:string;
   description: string;
   imageInfo: Image[];

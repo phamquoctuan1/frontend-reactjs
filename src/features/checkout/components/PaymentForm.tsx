@@ -6,11 +6,11 @@ import {
 import paymentApi from 'api/paymentApi';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { AxiosError } from 'axios';
-import ButtonCpn from 'components/common/Button';
+import ButtonCpn from 'components/Common/Button';
 import { selectCurrentUser } from 'features/auth/authSlice';
 import { cartActions, selectValueCart } from 'features/cart/cartItemsSlice';
 import React , {  useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
@@ -26,6 +26,7 @@ import vnpayLogo from '../logo/vnpay.jpg';
      },
    }));
 export default function PaymentForm() {
+  const history =useHistory();
   const infoCheckout = useAppSelector(selectCheckoutInfo); 
   const addressDetails =
     infoCheckout.city +
@@ -55,10 +56,11 @@ export default function PaymentForm() {
     });
     const order = {
       userId: user?.id,
-      name_customer:infoCheckout.name,
+      name_customer: infoCheckout.name,
       listItems: list,
       fee: infoCheckout.fee,
       phone: infoCheckout.phone,
+      email: infoCheckout.email,
       address: addressDetails,
     };
     const payUrl = await paymentApi.getPaymentMomo(order);
@@ -82,6 +84,7 @@ export default function PaymentForm() {
       userId: user?.id,
       listItems: list,
       fee: infoCheckout.fee,
+      email: infoCheckout.email,
       phone: infoCheckout.phone,
       address: addressDetails,
     };
@@ -119,7 +122,9 @@ export default function PaymentForm() {
           'Thanh toán thành công!',
           'Bạn có thể tiếp tục mua hàng hoặc kiểm tra đơn hàng tại hồ sơ',
           'success'
-        );
+        ).then(function () {
+          history.push('/');
+        });
      } catch (error) {
         let msg = (error as AxiosError).response?.data.message;     
        toast.error(msg, {

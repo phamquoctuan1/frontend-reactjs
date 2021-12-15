@@ -1,4 +1,4 @@
-import { Grid, ProductCard } from 'components/common';
+import { Grid, ProductCard } from 'components/Common';
 import { Product } from 'models';
 import React, { useEffect, useRef, useState } from 'react';
 
@@ -62,6 +62,7 @@ export default function InfinityList({ product }: InfinityListProps) {
             img01={item.imageInfo[0]?.url}
             img02={item.imageInfo[1]?.url}
             name={item.name}
+            discount_price={item.discount_percentage}
             price={Number(item.price)}
             slug={item.slug}
           />

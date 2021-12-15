@@ -8,7 +8,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import { Helmet } from 'components/common';
+import { Helmet } from 'components/Common';
 import { InputField } from 'components/FormFields';
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';

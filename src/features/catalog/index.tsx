@@ -1,12 +1,12 @@
 import { Box, makeStyles } from '@material-ui/core';
-import categoryApi from 'api/categoryApi';
 import productApi from 'api/productApi';
-import { useAppDispatch } from 'app/hooks';
-import { Helmet, Section, SectionBody } from 'components/common';
-import Button from 'components/common/Button';
-import CheckBox from 'components/common/CheckBox';
-import SearchForm from 'components/common/SearchForm';
-import { Category, Color, Product, Size } from 'models';
+import { useAppDispatch, useAppSelector } from 'app/hooks';
+import { Helmet, Section, SectionBody } from 'components/Common';
+import ButtonBnt from 'components/Common/Button';
+import CheckBox from 'components/Common/CheckBox';
+import SearchForm from 'components/Common/SearchForm';
+import { productActions, selectProductList } from 'features/product/productSlice';
+import { Color, ListResponse, Product, Size } from 'models';
 import React, { useEffect, useRef, useState } from 'react';
 import InputRange from 'react-input-range';
 import { numberWithCommas } from 'utils';
@@ -19,19 +19,19 @@ export interface initialFilterType {
   _page?: number;
   _limit?: number;
   name: string | undefined;
-  category: string[];
+  categoryId: number|undefined;
   color: string[];
   size: string[];
   price?: number;
 }
 const initialFilter: initialFilterType = {
   name: undefined,
-  _page: 0,
+  _page: 1,
   _limit: 30,
-  category: [],
   color: [],
   size: [],
-  price:0
+  categoryId:undefined,
+  price: undefined,
 };
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,39 +46,17 @@ const useStyles = makeStyles((theme) => ({
 export default function Catalog() {
   const priceSearchTimeoutRef = useRef<any>(null)
   const classes = useStyles();
-  const [productList, setProductList] = useState<Product[]>();
+  const productList = useAppSelector(selectProductList)
   const dispatch = useAppDispatch();
   const [filter, setFilter] = useState(initialFilter);
-  const [category, setCategory] = useState<Category[]>();
-  const [price, setPrice] = useState(100000)
-  useEffect(() => {
-    const getCategory = async () => {
-      try {
-        const category = await categoryApi.getAll();
-        setCategory(category.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getCategory();
-  }, []);
+   const [price, setPrice] = useState(100000);
+
+ 
 
   const filterRef = useRef<HTMLDivElement>(null);
   const showHideFilter = () => filterRef.current?.classList.toggle('active');
 
   const clearFilter = () => setFilter(initialFilter);
-
-  const handleOnchangeCategory = (value: Category) => {
-    const currentIdx: number = filter.category.indexOf(value.slug);
-    const newCategory = [...filter.category];
-    if (currentIdx === -1) {
-      newCategory.push(value.slug);
-    } else {
-      newCategory.splice(currentIdx, 1);
-    }
-    setFilter({ ...filter, category: newCategory });
-    console.log(currentIdx);
-  };
 
   const handleOnchangeColor = (value: Color) => {
     const currentIdx: number = filter.color.indexOf(value.code);
@@ -117,13 +95,11 @@ export default function Catalog() {
   const handleSearchSubmit = async (formValues: any) => {
     setFilter({ ...filter, name: formValues.name });
   };
-
-
   useEffect(() => {
     const fetchProductList = async () => {
       try {
-        const productListData = await productApi.getAll(filter);
-        setProductList(productListData.data);
+        const productListData :ListResponse<Product> = await productApi.getAll(filter);
+        dispatch(productActions.fetchProductListSuccess(productListData))
       } catch (error) {
         console.log(error);
       }
@@ -148,25 +124,16 @@ export default function Catalog() {
               />
             </div>
 
-            <div className='catalog__filter__widget__title'>
+            {/* <div className='catalog__filter__widget__title'>
               danh mục sản phẩm
             </div>
             <div className='catalog__filter__widget__content'>
-              {category?.map((item, index) => (
-                <div
-                  key={index}
-                  className='catalog__filter__widget__content__item'
-                >
-                  <CheckBox
-                    label={item.name}
-                    onChange={() => handleOnchangeCategory(item)}
-                    checked={
-                      filter.category.indexOf(item.slug) === -1 ? false : true
-                    }
-                  />
-                </div>
-              ))}
-            </div>
+              <Button color='primary' size='medium' onClick={clearFilter}>
+                Tất cả
+              </Button>
+            <div></div>
+             
+            </div> */}
           </div>
 
           <div className='catalog__filter__widget'>
@@ -224,16 +191,16 @@ export default function Catalog() {
 
           <div className='catalog__filter__widget'>
             <div className='catalog__filter__widget__content'>
-              <Button size='sm' onClick={clearFilter}>
+              <ButtonBnt size='sm' onClick={clearFilter}>
                 xóa bộ lọc
-              </Button>
+              </ButtonBnt>
             </div>
           </div>
         </div>
         <div className='catalog__filter__toggle'>
-          <Button size='sm' onClick={() => showHideFilter()}>
+          <ButtonBnt size='sm' onClick={() => showHideFilter()}>
             bộ lọc
-          </Button>
+          </ButtonBnt>
         </div>
         <div className='catalog__content'>
           {productList?.length !== 0 ? (
@@ -247,13 +214,7 @@ export default function Catalog() {
               <SectionBody>
                 <Box className={classes.root}>
                   <h1>Không tìm thấy sản phẩm nào theo yêu cầu</h1>
-                  <Button
-                    onClick={() => {
-                      setFilter(initialFilter);
-                    }}
-                  >
-                    Quay lại
-                  </Button>
+                  <ButtonBnt onClick={()=>clearFilter()}>Quay lại</ButtonBnt>
                 </Box>
               </SectionBody>
             </Section>

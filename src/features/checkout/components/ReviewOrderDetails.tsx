@@ -5,9 +5,8 @@ import {
   ListItemText,
   makeStyles, Typography
 } from '@material-ui/core';
+import dayjs from 'dayjs';
 import * as React from 'react';
-import { covertDateTime } from 'utils';
-
 export interface ReviewOrderDetailsProps {
   data: any;
 }
@@ -75,7 +74,7 @@ export default function ReviewOrderDetails({ data }: ReviewOrderDetailsProps) {
                   secondary: classes.listItemTextSecondary,
                 }}
                 primary='Số lượng'
-                secondary={`${item.quantity} Cái`}
+                secondary={`${item.quantity} Bộ`}
               />
               <ListItemText
                 classes={{
@@ -99,7 +98,9 @@ export default function ReviewOrderDetails({ data }: ReviewOrderDetailsProps) {
                   secondary: classes.listItemTextSecondary,
                 }}
                 primary='Ngày đặt'
-                secondary={covertDateTime(item.createdAt)}
+                secondary={dayjs(item.createdAt).format(
+                  'DD/MM/YYYY'
+                )}
               />
             </Box>
           </ListItem>

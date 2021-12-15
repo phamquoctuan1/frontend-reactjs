@@ -1,5 +1,5 @@
 import { useAppDispatch } from 'app/hooks';
-import Button from 'components/common/Button';
+import Button from 'components/Common/Button';
 import { cartActions } from 'features/cart/cartItemsSlice';
 import { Product, Size } from 'models';
 import React, { useEffect, useState } from 'react';
@@ -18,7 +18,7 @@ const ProductView = ({ product }: ProductViewProps) => {
     product = {
       name: '',
       price: 0,
-      amount: 0,
+      quantity: 0,
       description: '',
       imageInfo: [],
       sizeInfo: [],
@@ -57,11 +57,15 @@ const ProductView = ({ product }: ProductViewProps) => {
 
   const check = () => {
     if (color === '') {
-      alert('Vui lòng chọn màu sắc!');
+      MySwal.fire(
+        'Vui lòng chọn màu sắc!',
+        '',
+        'warning'
+      );
       return false;
     }
     if (size === '') {
-      alert('Vui lòng chọn kích cỡ!');
+      MySwal.fire('Vui lòng chọn kích cỡ!', '', 'warning');
       return false;
     }
     return true;
@@ -109,6 +113,7 @@ const ProductView = ({ product }: ProductViewProps) => {
   };
   const goToCart = () => {
     if (check()) {
+      
      let newItem = {
        productId: product?.id,
        image: product?.imageInfo[0].url,

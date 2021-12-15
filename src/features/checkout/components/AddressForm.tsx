@@ -38,8 +38,13 @@ const schema = yup
   .object({
     name: yup.string().required('Vui lòng nhập tên'),
     address: yup.string().required('Vui lòng cung cấp địa chỉ'),
+    email: yup
+      .string()
+      .email('Vui lòng nhập đúng định dạng email')
+      .required('Email không được bỏ trống'),
     phone: yup
       .string()
+      .required('Vui lòng cung số điện thoại')
       .matches(
         /^(0)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/,
         'Số điện thoại không hợp lệ'
@@ -97,6 +102,7 @@ export default function AddressForm() {
       orderId: Math.floor(Math.random() * 1000),
       id: user?.id,
       name: user?.name,
+      email: user?.email,
       address: user?.address,
       phone: user?.phone,
       city: infoCheckout.city,
@@ -182,6 +188,9 @@ export default function AddressForm() {
          }
        );
        setFee(c.data.fee.fee);
+       if (totalPrice>270000) {
+         setFee(0);
+       }
     } catch (error) {
       console.log(error)
     }
@@ -255,6 +264,21 @@ export default function AddressForm() {
               />
               {errors.phone && (
                 <Alert severity='error'>{errors.phone?.message}</Alert>
+              )}
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant='subtitle1' color='primary' component='span'>
+                email
+              </Typography>
+              <Controller
+                name='email'
+                control={control}
+                render={({ field }) => (
+                  <TextField {...field} fullWidth variant='standard' />
+                )}
+              />
+              {errors.email && (
+                <Alert severity='error'>{errors.email?.message}</Alert>
               )}
             </Grid>
             <Grid item xs={12} sm={6}>

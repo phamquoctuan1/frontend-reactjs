@@ -15,7 +15,7 @@ import EmailIcon from '@material-ui/icons/Email';
 import HomeIcon from '@material-ui/icons/Home';
 import PhoneIcon from '@material-ui/icons/Phone';
 import { useAppSelector } from 'app/hooks';
-import { Helmet } from 'components/common';
+import { Helmet } from 'components/Common';
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { selectCurrentUser } from '../authSlice';

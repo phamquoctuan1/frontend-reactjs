@@ -1,12 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from 'app/store';
-import { ListParams, ListResponse, PaginationParams, Product } from 'models';
+import { ListParams, ListResponse, Product } from 'models';
 
 export interface ProductState {
   loading: boolean;
   list: Product[];
   filter: ListParams;
-  pagination: PaginationParams;
   product: Product;
   value: string;
   className: string;
@@ -16,8 +15,6 @@ const initialState: ProductState = {
   loading: false,
   list: [],
   filter: {
-    _page: 0,
-    _limit: 24,
     category: undefined,
     color: undefined,
     size: undefined,
@@ -25,11 +22,6 @@ const initialState: ProductState = {
     _order: undefined,
     pricegte: undefined,
     pricelte: undefined,
-  },
-  pagination: {
-    _limit: 1,
-    _page: 15,
-    _totalRows: 15,
   },
   product: {
     name: '',
@@ -39,7 +31,7 @@ const initialState: ProductState = {
     sizeInfo: [],
     colorInfo: [],
     promoteInfo: [],
-    amount: 0,
+    quantity: 0,
     price: 0,
     description: '',
   },
@@ -58,7 +50,6 @@ const productSlice = createSlice({
       action: PayloadAction<ListResponse<Product>>
     ) {
       state.list = action.payload.data;
-      state.pagination = action.payload.pagination;
       state.loading = false;
     },
     fetchProductListFailed(state) {
@@ -92,8 +83,6 @@ export const selectProductList = (state: RootState) => state.product.list;
 export const selectProduct = (state: RootState) => state.product.product;
 export const selectProductLoading = (state: RootState) => state.product.loading;
 export const selectProductFilter = (state: RootState) => state.product.filter;
-export const selectProductPagination = (state: RootState) =>
-  state.product.pagination;
 //Reducer
 const productReducer = productSlice.reducer;
 export default productReducer;

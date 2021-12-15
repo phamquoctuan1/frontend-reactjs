@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 export default function LoginForm({ initialValues, onSubmit }: LoginFormProps) {
-  const userLogin = useAppSelector(selectErrorLogin);
+  const userLoginError = useAppSelector(selectErrorLogin);
   const dispatch = useAppDispatch();
   const {
     control,
@@ -62,7 +62,7 @@ export default function LoginForm({ initialValues, onSubmit }: LoginFormProps) {
           type='password'
           label='Mật khẩu'
         />
-        {userLogin && <Alert severity='error'>{userLogin}</Alert>}
+        {userLoginError && <Alert severity='error'>{userLoginError}</Alert>}
         <Box mt={2} className={classes.box}>
           <Button
             type='submit'

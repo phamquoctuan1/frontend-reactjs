@@ -1,10 +1,14 @@
-import { Badge } from '@material-ui/core';
+import { Badge, Button, ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } from '@material-ui/core';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import categoryApi from 'api/categoryApi';
+import productApi from 'api/productApi';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { authActions, selectCurrentUser } from 'features/auth/authSlice';
 import { selectValueCart } from 'features/cart/cartItemsSlice';
+import { productActions } from 'features/product/productSlice';
+import { Category } from 'models';
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import logo from '../../assets/images/Logo-2.png';
 import MenuUser from './MenuUser';
 const mainNav = [
@@ -16,15 +20,22 @@ const mainNav = [
     display: 'Sản phẩm',
     path: '/catalog',
   },
-  {
-    display: 'Phụ kiện',
-    path: '/accessories',
-  },
-  {
-    display: 'Liên hệ',
-    path: '/contact',
-  },
+ 
 ];
+
+
+export interface initialFilterType {
+  _page?: number;
+  _limit?: number;
+  categoryId: number | undefined;
+}
+const initialFilter: initialFilterType = {
+  _page: 1,
+  _limit: 30,
+  categoryId: undefined,
+};
+
+
 
 export const Header = () => {
   const cartItems = useAppSelector(selectValueCart);
@@ -34,7 +45,71 @@ export const Header = () => {
   const dispatch = useAppDispatch();
   const activeNav = mainNav.findIndex((e) => e.path === pathname);
   const token = JSON.parse(localStorage.getItem('access_token') || '{}');
+    const [filter, setFilter] = useState(initialFilter);
+    const [category, setCategory] = useState<Category[]>();
+const history = useHistory();
+   const [open, setOpen] = useState(false);
+   const anchorRef = useRef<HTMLButtonElement>(null);
 
+   const handleToggle = () => {
+     setOpen(true);
+    //  setOpen((prevOpen) => !prevOpen);
+   };
+  
+   const handleClose = (event: React.MouseEvent<EventTarget>) => {
+     if (
+       anchorRef.current &&
+       anchorRef.current.contains(event.target as HTMLElement)
+     ) {
+       return;
+     }
+     setOpen(false);
+   };
+
+   function handleListKeyDown(event: React.KeyboardEvent) {
+     if (event.key === 'Tab') {
+       event.preventDefault();
+       setOpen(false);
+     }
+   }
+
+   // return focus to the button when we transitioned from !open -> open
+   const prevOpen = useRef(open);
+   React.useEffect(() => {
+     if (prevOpen.current === true && open === false) {
+       anchorRef.current!.focus();
+     }
+
+     prevOpen.current = open;
+   }, [open]);
+ useEffect(() => {
+   const getCategory = async () => {
+     try {
+       const category = await categoryApi.getAll();
+       setCategory(category.data);
+     } catch (error) {
+       console.log(error);
+     }
+   };
+   getCategory();
+ }, []);
+ useEffect(() => {
+   const fetchProductList = async () => {
+     try {
+       const productListData = await productApi.getAll(filter);
+       dispatch(productActions.fetchProductListSuccess(productListData));
+     } catch (error) {
+       console.log(error);
+     }
+   };
+   fetchProductList();
+ }, [filter, dispatch]);
+   const handleCategoryClick = (item: Category) => {
+     setFilter({ ...filter, categoryId: item.id });
+      setOpen(false);
+     history.push('/catalog');
+   };
+  const clearFilter = () => { setFilter(initialFilter);  setOpen(false); history.push('/catalog')};
   const headerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     setTotalProducts(
@@ -97,6 +172,82 @@ export const Header = () => {
                 </Link>
               </div>
             ))}
+            <div className='header__menu__item header__menu__left__item'>
+              <Button
+                ref={anchorRef}
+                aria-controls={open ? 'menu-list-grow' : undefined}
+                aria-haspopup='true'
+                onClick={()=>clearFilter()}
+                onMouseOut={handleToggle}
+              >
+                <div className={`header__menu__item header__menu__left__item`}>
+                  <span
+                    style={{
+                      fontSize: '19.5px',
+                      textTransform: 'none',
+                      fontWeight: 'normal',
+                    }}
+                  >
+                    Danh mục{' '}
+                  </span>
+                </div>
+              </Button>
+            </div>
+            <Popper
+              open={open}
+              anchorEl={anchorRef.current}
+              role={undefined}
+              transition
+              disablePortal
+            >
+              {({ TransitionProps, placement }) => (
+                <Grow
+                  {...TransitionProps}
+                  style={{
+                    transformOrigin:
+                      placement === 'bottom' ? 'center top' : 'center bottom',
+                  }}
+                >
+                  <Paper>
+                    <ClickAwayListener onClickAway={handleClose}>
+                      <MenuList
+                        autoFocusItem={open}
+                        id='menu-list-grow'
+                        onKeyDown={handleListKeyDown}
+                        onMouseLeave={handleClose}
+                      >
+                        {' '}
+                        {/* <div className='catalog__filter__widget__content__item'>
+                          <MenuItem onClick={() => clearFilter()}>
+                            Tất cả
+                          </MenuItem>
+                        </div> */}
+                        {category?.map((item, index) => (
+                          <div
+                            key={index}
+                            className='catalog__filter__widget__content__item'
+                          >
+                            <MenuItem onClick={() => handleCategoryClick(item)}>
+                              {item.name}
+                            </MenuItem>
+                          </div>
+                        ))}
+                      </MenuList>
+                    </ClickAwayListener>
+                  </Paper>
+                </Grow>
+              )}
+            </Popper>
+            <div className='header__menu__item header__menu__left__item'>
+              <Link to='/about'>
+                <span>Giới thiệu</span>
+              </Link>
+            </div>
+            <div className='header__menu__item header__menu__left__item'>
+              <Link to='/contact'>
+                <span>Liên hệ</span>
+              </Link>
+            </div>
           </div>
           <div className='header__menu__right'>
             <div className='header__menu__item header__menu__right__item'></div>

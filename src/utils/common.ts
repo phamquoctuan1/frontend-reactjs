@@ -27,11 +27,6 @@ export const calculatorPromoteAmount = (
     discount_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' VNĐ'
   );
 };
-export const getMarkColor = (mark: number): string => {
-  if (mark >= 8) return 'green';
-  if (mark >= 4) return 'goldenrod';
-  return 'red';
-};
 
 
 export const covertDateTime = (date :any) =>{

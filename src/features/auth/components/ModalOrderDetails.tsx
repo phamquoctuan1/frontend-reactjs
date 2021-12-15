@@ -63,7 +63,6 @@ export default function ModalOrderDetails({ id, title }: ModalUserProps) {
     };
     getOrder();
   }, [id]);
-  console.log(orderDetails);
   return (
     <div>
       <Button

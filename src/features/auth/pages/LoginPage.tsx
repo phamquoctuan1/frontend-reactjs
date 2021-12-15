@@ -1,6 +1,6 @@
 import { Box, Button, makeStyles, Paper, Typography } from '@material-ui/core';
 import { useAppDispatch } from 'app/hooks';
-import { Helmet } from 'components/common';
+import { Helmet } from 'components/Common';
 import React, { useEffect } from 'react';
 import { GoogleLogin } from 'react-google-login';
 import { Link, useHistory } from 'react-router-dom';

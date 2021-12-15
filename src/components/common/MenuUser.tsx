@@ -109,7 +109,7 @@ export default function MenuUser(props: MenuUserProps) {
                     id='menu-list-grow'
                     onKeyDown={handleListKeyDown}
                   >
-                    <Link to='profile'>
+                    <Link to='/profile'>
                       <MenuItem
                         onClick={() => {
                           setOpen(false);

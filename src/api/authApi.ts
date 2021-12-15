@@ -16,7 +16,7 @@ const authApi = {
     const url = '/auth/refreshtoken';
     return axiosClient.post(url, data);
   },
-  activeUser(data: any): Promise<string> {
+  activeUser(data: any): Promise<any> {
     const url = `/auth/verify/${data.id}/${data.token}`;
     return axiosClient.get(url);
   },

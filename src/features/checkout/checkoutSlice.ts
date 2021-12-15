@@ -5,6 +5,7 @@ export interface CheckoutState {
   id: string|number|undefined;
   name: string | undefined;
   address: string | undefined;
+  email: string | undefined;
   phone: string | undefined;
   city: string | undefined;
   district: string | undefined;
@@ -19,6 +20,7 @@ const initialState: InfoOrder = {
     id:undefined,
     name: undefined,
     address: undefined,
+    email: undefined,
     phone: undefined,
     city: undefined,
     district: undefined,

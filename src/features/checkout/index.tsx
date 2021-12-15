@@ -22,7 +22,7 @@ export default function CheckoutPage() {
         if (Number(resultCode) === 0) {
           dispatch(cartActions.clearCart());
           MySwal.fire(
-            message as string,
+           'Đặt hàng thành công',
             'Bạn có thể tiếp tục mua hàng hoặc kiểm tra đơn hàng tại hồ sơ',
             'success'
           );
@@ -38,7 +38,7 @@ export default function CheckoutPage() {
         if (vnp_ResponseCode === '00') {
           dispatch(cartActions.clearCart());
           MySwal.fire(
-            message as string,
+            'Đặt hàng thành công',
             'Bạn có thể tiếp tục mua hàng hoặc kiểm tra đơn hàng tại hồ sơ',
             'success'
           );

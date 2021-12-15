@@ -8,7 +8,7 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import heroSliderData from '../../assets/fake-data/hero-slider';
 import policy from '../../assets/fake-data/policy';
-import banner from '../../assets/images/banner.png';
+import banner from '../../assets/images/banner2.png';
 import {
   Grid,
   Helmet,
@@ -18,7 +18,7 @@ import {
   Section,
   SectionBody,
   SectionTitle,
-} from '../../components/common';
+} from '../../components/Common';
 
 export default function Home() {
   const dispatch = useAppDispatch();
@@ -31,8 +31,7 @@ export default function Home() {
   const productlist1 = product.slice(0, 4);
   const productlist2 = product.slice(4, 12);
   const productlist3 = product.slice(12, 24);
-
-  
+  console.log(productlist3);
   return (
     <Helmet title='Trang chủ'>
       {/* hero slider */}
@@ -92,7 +91,7 @@ export default function Home() {
               <ProductCard
                 key={index}
                 img01={item.imageInfo[0]?.url}
-                img02={item.imageInfo[0]?.url}
+                img02={item.imageInfo[1]?.url}
                 name={item.name}
                 price={Number(item.price)}
                 discount_price={item.discount_percentage}
@@ -123,7 +122,7 @@ export default function Home() {
               <ProductCard
                 key={index}
                 img01={item.imageInfo[0]?.url}
-                img02={item.imageInfo[0]?.url}
+                img02={item.imageInfo[1]?.url}
                 name={item.name}
                 price={Number(item.price)}
                 discount_price={item.discount_percentage}
