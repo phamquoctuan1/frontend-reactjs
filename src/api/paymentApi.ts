@@ -2,7 +2,7 @@ import axiosClient from './axiosClient';
 
 const paymentApi = {
   getPaymentNormal(data: any) {
-    const url = 'payment/checkout/normal';
+    const url = '/payment/checkout/normal';
     return axiosClient.post(url, data);
   },
   getPaymentMomo(data: any) {

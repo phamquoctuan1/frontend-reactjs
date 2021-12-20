@@ -177,8 +177,10 @@ const history = useHistory();
                 ref={anchorRef}
                 aria-controls={open ? 'menu-list-grow' : undefined}
                 aria-haspopup='true'
-                onClick={()=>clearFilter()}
-                onMouseOut={handleToggle}
+                onClick={() => clearFilter()}
+                onMouseLeave={handleClose}
+                onMouseEnter={handleToggle}
+          
               >
                 <div className={`header__menu__item header__menu__left__item`}>
                   <span
@@ -208,9 +210,10 @@ const history = useHistory();
                       placement === 'bottom' ? 'center top' : 'center bottom',
                   }}
                 >
-                  <Paper>
+                  <Paper onMouseLeave={handleClose}>
                     <ClickAwayListener onClickAway={handleClose}>
                       <MenuList
+                       
                         autoFocusItem={open}
                         id='menu-list-grow'
                         onKeyDown={handleListKeyDown}

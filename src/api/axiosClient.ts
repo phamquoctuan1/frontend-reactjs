@@ -1,7 +1,10 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 const axiosClient = axios.create({
-  baseURL:'http://127.0.0.1:5000/api',
+  baseURL:
+    process.env.ENVIRONMENT === 'PRODUCTION'
+      ? process.env.BASE_URL_API_PRODUCTION
+      : process.env.BASE_URL_API,
   headers: {
     'Content-Type': 'application/json',
   },

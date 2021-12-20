@@ -52,11 +52,10 @@ export default function Catalog() {
    const [price, setPrice] = useState(100000);
 
  
-
   const filterRef = useRef<HTMLDivElement>(null);
   const showHideFilter = () => filterRef.current?.classList.toggle('active');
 
-  const clearFilter = () => setFilter(initialFilter);
+  const clearFilter = () =>{ setFilter(initialFilter); setPrice(100000)};
 
   const handleOnchangeColor = (value: Color) => {
     const currentIdx: number = filter.color.indexOf(value.code);
@@ -84,7 +83,6 @@ export default function Catalog() {
     if (priceSearchTimeoutRef.current){
       clearTimeout(priceSearchTimeoutRef.current);
     }
-
     priceSearchTimeoutRef.current = setTimeout(() => {
           setPrice(value);
           setFilter({ ...filter, price: value });
@@ -214,7 +212,7 @@ export default function Catalog() {
               <SectionBody>
                 <Box className={classes.root}>
                   <h1>Không tìm thấy sản phẩm nào theo yêu cầu</h1>
-                  <ButtonBnt onClick={()=>clearFilter()}>Quay lại</ButtonBnt>
+                  <ButtonBnt onClick={() =>clearFilter()}>Quay lại</ButtonBnt>
                 </Box>
               </SectionBody>
             </Section>
