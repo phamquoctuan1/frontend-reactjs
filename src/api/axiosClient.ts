@@ -3,8 +3,8 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 const axiosClient = axios.create({
   baseURL:
     process.env.ENVIRONMENT === 'PRODUCTION'
-      ? process.env.BASE_URL_API_PRODUCTION
-      : process.env.BASE_URL_API,
+      ? process.env.REACT_APP_BASE_URL_APIPRODUCTION
+      : process.env.REACT_APP_BASE_URL_API,
   headers: {
     'Content-Type': 'application/json',
   },
