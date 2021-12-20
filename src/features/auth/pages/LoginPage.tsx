@@ -24,8 +24,10 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
   },
 }));
-const configValue: string = process.env
-  .REACT_APP_GOOGLE_LOGIN_CLIENT_ID as string;
+const configValue: string =
+  process.env.REACT_APP_ENVIRONMENT === 'PRODUCTION'
+    ? (process.env.REACT_APP_GOOGLE_LOGIN_CLIENT_ID_PRODUCTION as string)
+    : (process.env.REACT_APP_GOOGLE_LOGIN_CLIENT_ID as string);
 export default function LoginPage() {
   const history = useHistory();
   const user = localStorage.getItem('access_token');
