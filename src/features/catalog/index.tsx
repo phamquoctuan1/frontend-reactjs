@@ -1,10 +1,10 @@
 import { Box, makeStyles } from '@material-ui/core';
 import productApi from 'api/productApi';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
-import { Helmet, Section, SectionBody } from 'components/Common';
-import ButtonBnt from 'components/Common/Button';
-import CheckBox from 'components/Common/CheckBox';
-import SearchForm from 'components/Common/SearchForm';
+import { Helmet, Section, SectionBody } from 'components/common';
+import ButtonBnt from 'components/common/Button';
+import CheckBox from 'components/common/CheckBox';
+import SearchForm from 'components/common/SearchForm';
 import { productActions, selectProductList } from 'features/product/productSlice';
 import { Color, ListResponse, Product, Size } from 'models';
 import React, { useEffect, useRef, useState } from 'react';

@@ -1,4 +1,4 @@
-import { Grid, ProductCard } from 'components/Common';
+import { Grid, ProductCard } from 'components/common';
 import { Product } from 'models';
 import React, { useEffect, useRef, useState } from 'react';
 

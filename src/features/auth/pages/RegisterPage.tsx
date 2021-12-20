@@ -7,7 +7,7 @@ import {
   Theme,
 } from '@material-ui/core';
 import authApi from 'api/authApi';
-import { Helmet } from 'components/Common';
+import { Helmet } from 'components/common';
 import { User } from 'models';
 import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';

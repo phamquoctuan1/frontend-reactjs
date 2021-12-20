@@ -6,7 +6,7 @@ import {
 import paymentApi from 'api/paymentApi';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { AxiosError } from 'axios';
-import ButtonCpn from 'components/Common/Button';
+import ButtonCpn from 'components/common/Button';
 import { selectCurrentUser } from 'features/auth/authSlice';
 import { cartActions, selectValueCart } from 'features/cart/cartItemsSlice';
 import React , {  useState } from 'react';

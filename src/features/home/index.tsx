@@ -18,7 +18,7 @@ import {
   Section,
   SectionBody,
   SectionTitle,
-} from '../../components/Common';
+} from '../../components/common';
 
 export default function Home() {
   const dispatch = useAppDispatch();

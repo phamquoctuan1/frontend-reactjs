@@ -1,5 +1,5 @@
 import { useAppDispatch } from 'app/hooks';
-import Button from 'components/Common/Button';
+import Button from 'components/common/Button';
 import { cartActions } from 'features/cart/cartItemsSlice';
 import { Product, Size } from 'models';
 import React, { useEffect, useState } from 'react';

@@ -7,7 +7,7 @@ import {
   Section,
   SectionBody,
   SectionTitle
-} from 'components/Common';
+} from 'components/common';
 import { ProductResponse } from 'models';
 import React, { useEffect, useState } from 'react';
 import { Redirect, useParams } from 'react-router-dom';

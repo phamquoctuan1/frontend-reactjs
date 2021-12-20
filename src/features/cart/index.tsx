@@ -1,7 +1,7 @@
 import { Box } from '@material-ui/core';
 import { useAppSelector } from 'app/hooks';
-import { Helmet } from 'components/Common';
-import Button from 'components/Common/Button';
+import { Helmet } from 'components/common';
+import Button from 'components/common/Button';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { numberWithCommas } from 'utils';

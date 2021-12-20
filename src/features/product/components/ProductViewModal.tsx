@@ -1,6 +1,6 @@
 import productApi from 'api/productApi';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
-import Button from 'components/Common/Button';
+import Button from 'components/common/Button';
 import { ProductResponse } from 'models';
 import React, { useEffect, useState } from 'react';
 import {

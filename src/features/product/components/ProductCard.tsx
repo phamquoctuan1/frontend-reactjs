@@ -2,7 +2,7 @@ import { useAppDispatch } from 'app/hooks';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { calculatorPromotePercentage, numberWithCommas } from 'utils';
-import Button from '../../../components/Common/Button';
+import Button from '../../../components/common/Button';
 import { productActions } from '../productSlice';
 
 export interface ProductCardProps {
