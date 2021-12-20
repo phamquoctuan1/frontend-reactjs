@@ -1,10 +1,14 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
+
+let baseUrl =
+  process.env.REACT_APP_ENVIRONMENT === 'PRODUCTION'
+    ? process.env.REACT_APP_BASE_URL_API_PRODUCTION
+    : process.env.REACT_APP_BASE_URL_API; 
+         
+
 const axiosClient = axios.create({
-  baseURL:
-    process.env.REACT_APP_ENVIRONMENT === 'PRODUCTION'
-      ? process.env.REACT_APP_BASE_URL_APIPRODUCTION
-      : process.env.REACT_APP_BASE_URL_API,
+  baseURL: baseUrl,
   headers: {
     'Content-Type': 'application/json',
   },
