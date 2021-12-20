@@ -110,6 +110,7 @@ export default function PaymentForm() {
           userId: user?.id,
           listItems: list,
           fee: infoCheckout.fee,
+          email: infoCheckout.email,
           phone: infoCheckout.phone,
           address: addressDetails,
         };

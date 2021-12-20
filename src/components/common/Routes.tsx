@@ -5,6 +5,8 @@ import RegisterPage from 'features/auth/pages/RegisterPage';
 import ResetPasswordPage from 'features/auth/pages/ResetPasswordPage';
 import CheckoutPage from 'features/checkout';
 import PaymentForm from 'features/checkout/components/PaymentForm';
+import ContactPage from 'features/staticspage';
+import About from 'features/staticspage/About';
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Cart from '../../features/cart';
@@ -51,6 +53,12 @@ export function Routes() {
       </Route>
       <Route path='/payment/:id'>
         <PaymentForm />
+      </Route>
+      <Route path='/contact'>
+        <ContactPage />
+      </Route>
+      <Route path='/about'>
+        <About />
       </Route>
     </Switch>
   );

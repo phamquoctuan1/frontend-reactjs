@@ -268,7 +268,7 @@ export default function AddressForm() {
             </Grid>
             <Grid item xs={12}>
               <Typography variant='subtitle1' color='primary' component='span'>
-                email
+                Email
               </Typography>
               <Controller
                 name='email'
