@@ -1,12 +1,14 @@
 import { Badge, Button, ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } from '@material-ui/core';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import categoryApi from 'api/categoryApi';
-import productApi from 'api/productApi';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { authActions, selectCurrentUser } from 'features/auth/authSlice';
 import { selectValueCart } from 'features/cart/cartItemsSlice';
-import { productActions } from 'features/product/productSlice';
-import { Category } from 'models';
+import {
+  productActions,
+  selectProductFilter
+} from 'features/product/productSlice';
+import { Category, ListParams } from 'models';
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import logo from '../../assets/images/Logo-2.png';
@@ -29,10 +31,14 @@ export interface initialFilterType {
   _limit?: number;
   categoryId: number | undefined;
 }
-const initialFilter: initialFilterType = {
+const initialFilter: ListParams = {
+  name: undefined,
   _page: 1,
   _limit: 30,
+  color: [],
+  size: [],
   categoryId: undefined,
+  price: undefined,
 };
 
 
@@ -45,7 +51,7 @@ export const Header = () => {
   const dispatch = useAppDispatch();
   const activeNav = mainNav.findIndex((e) => e.path === pathname);
   const token = JSON.parse(localStorage.getItem('access_token') || '{}');
-    const [filter, setFilter] = useState(initialFilter);
+     const filter = useAppSelector(selectProductFilter);
     const [category, setCategory] = useState<Category[]>();
 const history = useHistory();
    const [open, setOpen] = useState(false);
@@ -61,9 +67,9 @@ const history = useHistory();
        anchorRef.current &&
        anchorRef.current.contains(event.target as HTMLElement)
      ) {
-       return;
+        setOpen(false)
+        return;
      }
-     setOpen(false);
    };
 
    function handleListKeyDown(event: React.KeyboardEvent) {
@@ -93,23 +99,15 @@ const history = useHistory();
    };
    getCategory();
  }, []);
- useEffect(() => {
-   const fetchProductList = async () => {
-     try {
-       const productListData = await productApi.getAll(filter);
-       dispatch(productActions.fetchProductListSuccess(productListData));
-     } catch (error) {
-       console.log(error);
-     }
-   };
-   fetchProductList();
- }, [filter, dispatch]);
+  useEffect(() => {
+    dispatch(productActions.fetchProductList(filter));
+  }, [dispatch, filter]);
    const handleCategoryClick = (item: Category) => {
-     setFilter({ ...filter, categoryId: item.id });
+     dispatch(productActions.setFilter({ ...filter, categoryId: item.id }));
       setOpen(false);
      history.push('/catalog');
    };
-  const clearFilter = () => { setFilter(initialFilter);  setOpen(false); history.push('/catalog')};
+  const clearFilter = () => {  dispatch(productActions.setFilter(initialFilter));  setOpen(false); history.push('/catalog')};
   const headerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     setTotalProducts(
@@ -178,9 +176,8 @@ const history = useHistory();
                 aria-controls={open ? 'menu-list-grow' : undefined}
                 aria-haspopup='true'
                 onClick={() => clearFilter()}
-                onMouseLeave={handleClose}
                 onMouseEnter={handleToggle}
-          
+                onMouseLeave={handleClose}
               >
                 <div className={`header__menu__item header__menu__left__item`}>
                   <span
@@ -210,21 +207,15 @@ const history = useHistory();
                       placement === 'bottom' ? 'center top' : 'center bottom',
                   }}
                 >
-                  <Paper onMouseLeave={handleClose}>
+                  <Paper>
                     <ClickAwayListener onClickAway={handleClose}>
                       <MenuList
-                       
                         autoFocusItem={open}
                         id='menu-list-grow'
                         onKeyDown={handleListKeyDown}
-                        onMouseLeave={handleClose}
+                        onMouseEnter={handleToggle}
+                        onMouseLeave={()=>setOpen(false)}
                       >
-                        {' '}
-                        {/* <div className='catalog__filter__widget__content__item'>
-                          <MenuItem onClick={() => clearFilter()}>
-                            Tất cả
-                          </MenuItem>
-                        </div> */}
                         {category?.map((item, index) => (
                           <div
                             key={index}

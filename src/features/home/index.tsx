@@ -31,7 +31,6 @@ export default function Home() {
   const productlist1 = product.slice(0, 4);
   const productlist2 = product.slice(4, 12);
   const productlist3 = product.slice(12, 24);
-  console.log(productlist3);
   return (
     <Helmet title='Trang chủ'>
       {/* hero slider */}

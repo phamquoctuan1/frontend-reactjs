@@ -1,12 +1,11 @@
 import { Box, makeStyles } from '@material-ui/core';
-import productApi from 'api/productApi';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { Helmet, Section, SectionBody } from 'components/common';
 import ButtonBnt from 'components/common/Button';
 import CheckBox from 'components/common/CheckBox';
 import SearchForm from 'components/common/SearchForm';
-import { productActions, selectProductList } from 'features/product/productSlice';
-import { Color, ListResponse, Product, Size } from 'models';
+import { productActions, selectProductFilter, selectProductList } from 'features/product/productSlice';
+import { Color, ListParams, Size } from 'models';
 import React, { useEffect, useRef, useState } from 'react';
 import InputRange from 'react-input-range';
 import { numberWithCommas } from 'utils';
@@ -15,24 +14,7 @@ import { size } from 'utils/product-size';
 import '../../assets/css/index.css';
 import InfinityList from './components/InfinityList';
 
-export interface initialFilterType {
-  _page?: number;
-  _limit?: number;
-  name: string | undefined;
-  categoryId: number|undefined;
-  color: string[];
-  size: string[];
-  price?: number;
-}
-const initialFilter: initialFilterType = {
-  name: undefined,
-  _page: 1,
-  _limit: 30,
-  color: [],
-  size: [],
-  categoryId:undefined,
-  price: undefined,
-};
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -43,19 +25,44 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
   },
 }));
+// export interface initialFilterType {
+//   _page?: number;
+//   _limit?: number;
+//   name: string | undefined;
+//   categoryId: number | undefined;
+//   color: string[];
+//   size: string[];
+//   price?: number;
+// }
+const initialFilter: ListParams = {
+  name: undefined,
+  _page: 1,
+  _limit: 30,
+  color: [],
+  size: [],
+  categoryId: undefined,
+  price: undefined,
+};
+
 export default function Catalog() {
   const priceSearchTimeoutRef = useRef<any>(null)
   const classes = useStyles();
   const productList = useAppSelector(selectProductList)
   const dispatch = useAppDispatch();
-  const [filter, setFilter] = useState(initialFilter);
+ const filter = useAppSelector(selectProductFilter);
    const [price, setPrice] = useState(100000);
-
- 
+  // const history = useHistory();
+ const searchRef = useRef<HTMLInputElement>();
   const filterRef = useRef<HTMLDivElement>(null);
   const showHideFilter = () => filterRef.current?.classList.toggle('active');
 
-  const clearFilter = () =>{ setFilter(initialFilter); setPrice(100000)};
+  const clearFilter = () =>{
+     dispatch(productActions.setFilter({ ...initialFilter })); 
+      if (searchRef.current) {
+      searchRef.current.value = '';
+    }
+     setPrice(100000)
+    };
 
   const handleOnchangeColor = (value: Color) => {
     const currentIdx: number = filter.color.indexOf(value.code);
@@ -65,7 +72,7 @@ export default function Catalog() {
     } else {
       newColor.splice(currentIdx, 1);
     }
-    setFilter({ ...filter, color: newColor });
+    dispatch(productActions.setFilter({ ...filter, color: newColor }));
   };
 
   const handleOnchangeSize = (value: Size) => {
@@ -76,7 +83,7 @@ export default function Catalog() {
     } else {
       newSize.splice(currentIdx, 1);
     }
-    setFilter({ ...filter, size: newSize });
+    dispatch(productActions.setFilter({ ...filter, size: newSize }));
   };
   const handleOnchangePrice = (value: any) => {
    
@@ -85,25 +92,28 @@ export default function Catalog() {
     }
     priceSearchTimeoutRef.current = setTimeout(() => {
           setPrice(value);
-          setFilter({ ...filter, price: value });
+          dispatch(productActions.setFilter({ ...filter, price: value }));
     },100)
      
   }
 
-  const handleSearchSubmit = async (formValues: any) => {
-    setFilter({ ...filter, name: formValues.name });
-  };
+  // useEffect(() => {
+  //   const fetchProductList = async () => {
+  //     try {
+  //       const productListData :ListResponse<Product> = await productApi.getAll(filter);
+  //       dispatch(productActions.fetchProductListSuccess(productListData))
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   fetchProductList();
+  // }, [filter, dispatch]);
   useEffect(() => {
-    const fetchProductList = async () => {
-      try {
-        const productListData :ListResponse<Product> = await productApi.getAll(filter);
-        dispatch(productActions.fetchProductListSuccess(productListData))
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchProductList();
-  }, [filter, dispatch]);
+    dispatch(productActions.fetchProductList(filter));
+  }, [dispatch, filter]);
+  const handleSearchChange = (newFilter: ListParams) => {
+    dispatch(productActions.setFilterWithDebounce(newFilter));
+  };
   return (
     <Helmet title='Sản phẩm'>
       <div className='catalog'>
@@ -117,8 +127,9 @@ export default function Catalog() {
           <div className='catalog__filter__widget'>
             <div className='catalog__filter__widget__title'>
               <SearchForm
-                initialValues={{ name: '' }}
-                onSubmit={handleSearchSubmit}
+                searchRef={searchRef}
+                filter={filter}
+                onSearchChange={handleSearchChange}
               />
             </div>
 
@@ -201,10 +212,10 @@ export default function Catalog() {
           </ButtonBnt>
         </div>
         <div className='catalog__content'>
-          {productList?.length !== 0 ? (
+          {productList?.length ? (
             <Section>
               <SectionBody>
-                <InfinityList product={productList} />
+                <InfinityList products={productList} />
               </SectionBody>
             </Section>
           ) : (
@@ -212,7 +223,7 @@ export default function Catalog() {
               <SectionBody>
                 <Box className={classes.root}>
                   <h1>Không tìm thấy sản phẩm nào theo yêu cầu</h1>
-                  <ButtonBnt onClick={() =>clearFilter()}>Quay lại</ButtonBnt>
+                  <ButtonBnt onClick={clearFilter}>Quay lại</ButtonBnt>
                 </Box>
               </SectionBody>
             </Section>

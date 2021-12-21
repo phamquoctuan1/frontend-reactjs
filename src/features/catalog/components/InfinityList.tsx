@@ -3,9 +3,9 @@ import { Product } from 'models';
 import React, { useEffect, useRef, useState } from 'react';
 
 export interface InfinityListProps {
-  product?: Product[];
+  products?: Product[];
 }
-export default function InfinityList({ product }: InfinityListProps) {
+export default function InfinityList({ products }: InfinityListProps) {
   const perLoad = 6; // items each load
 
   const listRef = useRef<HTMLDivElement>(null);
@@ -17,9 +17,10 @@ export default function InfinityList({ product }: InfinityListProps) {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    setData(product?.slice(0, perLoad));
+
+    setData(products?.slice(0, perLoad));
     setIndex(1);
-  }, [product]);
+  }, [products]);
 
   useEffect(() => {
     window.addEventListener('scroll', () => {
@@ -36,22 +37,25 @@ export default function InfinityList({ product }: InfinityListProps) {
 
   useEffect(() => {
     const getItems = () => {
-      if (product) {
-        const pages = Math.floor(product.length / perLoad);
-        const maxIndex = product?.length % perLoad === 0 ? pages : pages + 1;
+      if (products?.length) {
+        const pages = Math.floor(products.length / perLoad);
+        const maxIndex = products?.length % perLoad === 0 ? pages : pages + 1;
 
         if (load && index <= maxIndex) {
           const start = perLoad * index;
           const end = start + perLoad;
-
-          setData(data?.concat(product.slice(start, end)));
+  
+          setData((preState) => preState?.concat(products.slice(start, end)));
           setIndex(index + 1);
         }
       }
     };
     getItems();
     setLoad(false);
-  }, [load, index, data, product]);
+  }, [load, index, data, products]);
+
+
+
 
   return (
     <div ref={listRef}>

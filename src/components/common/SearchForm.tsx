@@ -1,8 +1,8 @@
-import { alpha, createStyles, makeStyles, Theme } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
-import { SearchInputField } from 'components/FormFields/SearchInputField';
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { alpha, createStyles, FormControl, Input, InputLabel, makeStyles, Theme } from '@material-ui/core';
+import { Search } from '@material-ui/icons';
+import { ListParams } from 'models';
+import React, { ChangeEvent } from 'react';
+
 
 export interface IAppProps {}
 const useStyles = makeStyles((theme: Theme) =>
@@ -39,38 +39,36 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 export interface SearchFormProps {
-  initialValues?: any;
-  onSubmit?: (formValues: any) => void;
+  filter: ListParams;
+  onSearchChange?: (newFilter: ListParams) => void;
+  searchRef:any;
 }
-export default function SearchForm({
-  initialValues,
-  onSubmit,
-}: SearchFormProps) {
-  const [error, setError] = useState<string>('');
-  const { handleSubmit, control, reset } = useForm<any>({
-    defaultValues: initialValues,
-  });
-  const handleOnSubmit = async (formValues: any) => {
-    try {
-      setError('');
-      await onSubmit?.(formValues);
-      reset();
-    } catch (err) {
-      let msg = (err as Error).message;
-      setError(msg);
-    }
+export default function SearchForm({ filter, onSearchChange, searchRef }: SearchFormProps) {
+  
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!onSearchChange) return;
+    const newFilter: ListParams = {
+      ...filter,
+      name: e.target.value,
+      _page: 1,
+    };
+    onSearchChange(newFilter);
   };
+
   const classes = useStyles();
   return (
     <div className={classes.search}>
-      <form className={classes.root} onSubmit={handleSubmit(handleOnSubmit)}>
-        <SearchInputField
-          placeholder='Tìm kiếm sản phẩm ...'
-          name='name'
-          control={control}
-        />
-      </form>
-      {error && <Alert severity='error'>{error}</Alert>}
+      <div>
+        <FormControl variant='outlined' size='small'>
+          <InputLabel htmlFor='searchByName'>Tìm theo tên</InputLabel>
+          <Input
+            id='searchByName'
+            endAdornment={<Search />}
+            onChange={handleSearchChange}
+            inputRef={searchRef}
+          />
+        </FormControl>
+      </div>
     </div>
   );
 }

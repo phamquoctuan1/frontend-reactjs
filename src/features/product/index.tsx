@@ -9,7 +9,7 @@ import {
   SectionTitle
 } from 'components/common';
 import { ProductResponse } from 'models';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Redirect, useParams } from 'react-router-dom';
 import ProductView from './components/ProductView';
 // import ProductView from './components/ProductView';
@@ -25,12 +25,11 @@ export default function ProductPage() {
   const dispatch = useAppDispatch();
 
   const product = useAppSelector(selectProduct);
-  const filterStore = useAppSelector(selectProductFilter);
-  const [filter, setFilter] = useState(filterStore);
+  const filter = useAppSelector(selectProductFilter);
   const productList = useAppSelector(selectProductList);
   useEffect(() => {
-    setFilter({ _limit: 8, _page: 1 });
-  }, []);
+    dispatch(productActions.setFilter({ ...filter, _limit: 8, _page: 1 }));
+  }, [dispatch, filter]);
   useEffect(() => {
     dispatch(productActions.fetchProductList(filter));
   }, [filter, dispatch]);

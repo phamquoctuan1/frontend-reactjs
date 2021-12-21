@@ -33,5 +33,10 @@ export interface ListParams {
   _limit?: number;
   _sort?: string;
   _order?: 'asc' | 'desc';
+  name: string | undefined;
+  categoryId: number | undefined;
+  color: string[];
+  size: string[];
+  price?: number;
   [key: string]: any;
 }

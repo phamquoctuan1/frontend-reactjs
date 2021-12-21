@@ -33,9 +33,9 @@ export const ProductCard = (props: ProductCardProps) => {
           {props.discount_price
             ? calculatorPromotePercentage(props.price, props.discount_price)
             : props.price}
-          {props.discount_price !== '0%' ? <span className='product-card__price__discount'>
+          {props.discount_price !== '0%' && <span className='product-card__price__discount'>
             {props.discount_price}
-          </span> : null}
+          </span>}
           
           <div className='product-card__price__old'>
             <del>{numberWithCommas(props.price)}</del>
