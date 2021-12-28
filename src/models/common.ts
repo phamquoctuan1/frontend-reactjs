@@ -37,6 +37,6 @@ export interface ListParams {
   categoryId: number | undefined;
   color: string[];
   size: string[];
-  price?: number;
+  price?: number[];
   [key: string]: any;
 }

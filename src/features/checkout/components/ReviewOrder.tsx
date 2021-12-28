@@ -98,7 +98,7 @@ export default function ReviewOrder({ data }: ReviewOrderProps) {
                 secondary: classes.listItemTextSecondary,
               }}
               primary='Trạng thái'
-              secondary={item.status ? 'Đã xác nhận' : 'Chưa xác nhận'}
+              secondary={item.status}
             />
            <ModalOrderDetails title='xem chi tiết' id={item.id} />
           </ListItem>

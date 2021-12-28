@@ -50,7 +50,7 @@ export default function Catalog() {
   const productList = useAppSelector(selectProductList)
   const dispatch = useAppDispatch();
  const filter = useAppSelector(selectProductFilter);
-   const [price, setPrice] = useState(100000);
+   const [price, setPrice] = useState({min:0,max:300000});
   // const history = useHistory();
  const searchRef = useRef<HTMLInputElement>();
   const filterRef = useRef<HTMLDivElement>(null);
@@ -61,7 +61,7 @@ export default function Catalog() {
       if (searchRef.current) {
       searchRef.current.value = '';
     }
-     setPrice(100000)
+     setPrice({ min: 0, max: 300000 });
     };
 
   const handleOnchangeColor = (value: Color) => {
@@ -92,22 +92,13 @@ export default function Catalog() {
     }
     priceSearchTimeoutRef.current = setTimeout(() => {
           setPrice(value);
-          dispatch(productActions.setFilter({ ...filter, price: value }));
-    },100)
-     
+          dispatch(
+            productActions.setFilter({ ...filter, price: Object.values(value) })
+          );
+    },100) 
   }
-
-  // useEffect(() => {
-  //   const fetchProductList = async () => {
-  //     try {
-  //       const productListData :ListResponse<Product> = await productApi.getAll(filter);
-  //       dispatch(productActions.fetchProductListSuccess(productListData))
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   fetchProductList();
-  // }, [filter, dispatch]);
+  
+  
   useEffect(() => {
     dispatch(productActions.fetchProductList(filter));
   }, [dispatch, filter]);
@@ -190,11 +181,13 @@ export default function Catalog() {
             <div className='catalog__filter__widget__content'>
               <InputRange
                 maxValue={300000}
-                minValue={100000}
+                minValue={0}
                 formatLabel={(value) => numberWithCommas(value)}
                 value={price}
                 onChange={(value) => handleOnchangePrice(value)}
+                // onChangeComplete={(value) => console.log(value)}
               />
+          
             </div>
           </div>
 
