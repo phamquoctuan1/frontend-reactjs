@@ -27,6 +27,10 @@ const productApi = {
     const url = `/products/${id}`;
     return axiosClient.delete(url);
   },
+  delete(id: number): Promise<any> {
+    const url = `/order/deletebyUser/${id}`;
+    return axiosClient.delete(url);
+  },
 };
 
 export default productApi;

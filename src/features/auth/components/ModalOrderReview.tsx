@@ -10,6 +10,7 @@ import authApi from 'api/authApi';
 import ReviewOrder from 'features/checkout/components/ReviewOrder';
 import { User } from 'models';
 import React, { useEffect, useState } from 'react';
+import productApi from 'api/productApi';
 const useStyles = makeStyles((theme: Theme) => ({
   modal: {
     display: 'flex',
@@ -61,6 +62,11 @@ export default function ModalOrderReview({ user, title }: ModalUserProps) {
   const handleClose = () => {
     setOpen(false);
   };
+  const handleCancelOrder = async (id:any) => {
+       await productApi.delete(id);
+      const res = await authApi.getOrderReview(user?.id);
+       setOrderReview(res);
+  }
  useEffect(() => {
      const getOrder = async() => {
         const res = await authApi.getOrderReview(user?.id);
@@ -95,7 +101,7 @@ export default function ModalOrderReview({ user, title }: ModalUserProps) {
           <Container maxWidth='sm' className={classes.paper}>
             <Grid container spacing={0}>
               <Grid item xs={12}>
-                <ReviewOrder data={orderReview} />
+                <ReviewOrder data={orderReview} onCancelOrder={handleCancelOrder}/>
               </Grid>
             </Grid>
           </Container>

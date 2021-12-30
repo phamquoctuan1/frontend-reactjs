@@ -18,6 +18,7 @@ export function Layout() {
             <Footer />
             <ProductViewModal />
           </div>
+          
         )}
       />
     </Router>

@@ -20,6 +20,7 @@ export interface Promote {
   discount_amount?: number;
 }
 
+
 export interface Product {
   id?: number;
   name: string;

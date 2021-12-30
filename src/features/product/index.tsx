@@ -16,23 +16,30 @@ import ProductView from './components/ProductView';
 import {
   productActions,
   selectProduct,
-  selectProductFilter,
   selectProductList
 } from './productSlice';
 
+
+const filter = {
+  name: undefined,
+  _page: 1,
+  _limit: 8,
+  color: [],
+  size: [],
+  categoryId: undefined,
+  price: undefined,
+};
 export default function ProductPage() {
   let { slug } = useParams<{ slug?: string }>();
   const dispatch = useAppDispatch();
 
   const product = useAppSelector(selectProduct);
-  const filter = useAppSelector(selectProductFilter);
+  
   const productList = useAppSelector(selectProductList);
-  useEffect(() => {
-    dispatch(productActions.setFilter({ ...filter, _limit: 8, _page: 1 }));
-  }, [dispatch, filter]);
+ 
   useEffect(() => {
     dispatch(productActions.fetchProductList(filter));
-  }, [filter, dispatch]);
+  }, [dispatch]);
 
   useEffect(() => {
     const getProduct = async () => {

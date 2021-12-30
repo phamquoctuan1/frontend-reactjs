@@ -1,4 +1,6 @@
 import {
+  Box,
+  Button,
   List,
   ListItem,
   ListItemText,
@@ -7,9 +9,11 @@ import {
 } from '@material-ui/core';
 import ModalOrderDetails from 'features/auth/components/ModalOrderDetails';
 import * as React from 'react';
+import { toast } from 'react-toastify';
 import { numberWithCommas } from 'utils';
-export interface ReviewOrderProps{
+export interface ReviewOrderProps {
   data: any;
+  onCancelOrder (id:any):void;
 }
 
 
@@ -34,8 +38,32 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 'bold',
   },
 }));
-export default function ReviewOrder({ data }: ReviewOrderProps) {
-   const classes = useStyles();
+export default function ReviewOrder({ data, onCancelOrder }: ReviewOrderProps) {
+  const handleCancelOrder = async (id: any) => {
+    try {
+      onCancelOrder(id);   
+      toast.success('thành công!', {
+        position: 'top-right',
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } catch (error) {
+      toast.error('Thất bại!', {
+        position: 'top-right',
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  };
+  const classes = useStyles();
   return (
     <React.Fragment>
       <Typography
@@ -100,7 +128,19 @@ export default function ReviewOrder({ data }: ReviewOrderProps) {
               primary='Trạng thái'
               secondary={item.status}
             />
-           <ModalOrderDetails title='xem chi tiết' id={item.id} />
+            {item.status === 'Chờ xác nhận' && (
+              <Box mt={3} mb={3}>
+                <Button
+                  type='button'
+                  onClick={() => handleCancelOrder(item.id)}
+                  variant='contained'
+                  color='secondary'
+                >
+                  hủy đơn hàng
+                </Button>
+              </Box>
+            )}
+            <ModalOrderDetails title='xem chi tiết' id={item.id} />
           </ListItem>
         ))}
       </List>
